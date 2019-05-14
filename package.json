@@ -1,7 +1,7 @@
 {
-  "name": "@forrestjs/forrestjs.github.io",
+  "name": "@forrestjs/gitbook",
   "version": "0.0.1",
-  "description": "ForrestJS Documentation Project",
+  "description": "ForrestJS Gitbook Source",
   "scripts": {
     "book:install": "node_modules/.bin/gitbook install",
     "book:serve": "node_modules/.bin/gitbook serve",
@@ -10,12 +10,12 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/forrestjs/forrestjs.github.io.git"
+    "url": "git+https://github.com/forrestjs/gitbook.git"
   },
   "author": "Marco Pegoraro",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/forrestjs/forrestjs.github.io/issues"
+    "url": "https://github.com/forrestjs/gitbook/issues"
   },
   "homepage": "https://forrestjs.github.io",
   "keywords": [
@@ -23,14 +23,9 @@
     "ssr",
     "redux",
     "universal",
-    "server side rendering",
-    "forrestjs"
+    "server side rendering"
   ],
   "devDependencies": {
     "gitbook-cli": "^2.3.2"
-  },
-  "dependencies": {
-    "gitbook-plugin-code": "^0.1.0",
-    "gitbook-plugin-collapsible-menu": "^1.0.3"
   }
 }
