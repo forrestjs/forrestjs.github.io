@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>SSR with Styled Components · GitBook</title>
+        <title>createSSRState · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -69,10 +69,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../DEVELOPMENT.html" />
+    <link rel="next" href="create-ssr-context.html" />
     
     
-    <link rel="prev" href="services.html" />
+    <link rel="prev" href="./" />
     
 
     </head>
@@ -147,9 +147,9 @@
         
         
     
-        <li class="chapter " data-level="2.1" data-path="reducers.html">
+        <li class="chapter " data-level="2.1" data-path="../articles/reducers.html">
             
-                <a href="reducers.html">
+                <a href="../articles/reducers.html">
             
                     
                     Reducers
@@ -160,9 +160,9 @@
             
         </li>
     
-        <li class="chapter " data-level="2.2" data-path="services.html">
+        <li class="chapter " data-level="2.2" data-path="../articles/services.html">
             
-                <a href="services.html">
+                <a href="../articles/services.html">
             
                     
                     Services
@@ -173,9 +173,9 @@
             
         </li>
     
-        <li class="chapter active" data-level="2.3" data-path="styled-components.html">
+        <li class="chapter " data-level="2.3" data-path="../articles/styled-components.html">
             
-                <a href="styled-components.html">
+                <a href="../articles/styled-components.html">
             
                     
                     SSR with Styled Components
@@ -227,9 +227,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="4.1.1" data-path="../api/">
+        <li class="chapter " data-level="4.1.1" data-path="./">
             
-                <a href="../api/">
+                <a href="./">
             
                     
                     API
@@ -241,9 +241,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="4.1.1.1" data-path="../api/create-ssr-state.html">
+        <li class="chapter active" data-level="4.1.1.1" data-path="create-ssr-state.html">
             
-                <a href="../api/create-ssr-state.html">
+                <a href="create-ssr-state.html">
             
                     
                     createSSRState
@@ -254,9 +254,9 @@
             
         </li>
     
-        <li class="chapter " data-level="4.1.1.2" data-path="../api/create-ssr-context.html">
+        <li class="chapter " data-level="4.1.1.2" data-path="create-ssr-context.html">
             
-                <a href="../api/create-ssr-context.html">
+                <a href="create-ssr-context.html">
             
                     
                     createSSRContext
@@ -267,9 +267,9 @@
             
         </li>
     
-        <li class="chapter " data-level="4.1.1.3" data-path="../api/create-ssr-render.html">
+        <li class="chapter " data-level="4.1.1.3" data-path="create-ssr-render.html">
             
-                <a href="../api/create-ssr-render.html">
+                <a href="create-ssr-render.html">
             
                     
                     createSSRRender
@@ -280,9 +280,9 @@
             
         </li>
     
-        <li class="chapter " data-level="4.1.1.4" data-path="../api/create-ssr-router.html">
+        <li class="chapter " data-level="4.1.1.4" data-path="create-ssr-router.html">
             
-                <a href="../api/create-ssr-router.html">
+                <a href="create-ssr-router.html">
             
                     
                     createSSRRouter
@@ -293,9 +293,9 @@
             
         </li>
     
-        <li class="chapter " data-level="4.1.1.5" data-path="../api/memcached.html">
+        <li class="chapter " data-level="4.1.1.5" data-path="memcached.html">
             
-                <a href="../api/memcached.html">
+                <a href="memcached.html">
             
                     
                     Memcached
@@ -759,7 +759,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >SSR with Styled Components</a>
+        <a href=".." >createSSRState</a>
     </h1>
 </div>
 
@@ -774,44 +774,68 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="styled-components">styled-components</h1>
-<p><a href="https://www.styled-components.com" target="_blank">styled-components</a> is a very nice styling library
-for React, and it is quite easy to have it SRRed using the app&apos;s context.</p>
-<p>The <strong>first step</strong> is to create a <code>StyleSheetManager</code> context for your app when it is
-handled by Node. Change your <code>index.ssr.js</code> like this:</p>
-<pre><code>...
-import { ServerStyleSheet, StyleSheetManager } from &apos;styled-components&apos;
+                                <h1 id="api---createssrstate">API - createSSRState</h1>
+<p>Use this method to create a <code>redux store</code> factory function:</p>
+<pre><code>const createStore = createSSRState(reducers, features, settings)
+const reduxStore = createStore(initialState, history)
 
-...
-const Root = ({ store, location, context, ...props }) =&gt; {
-    context.styledComponents = context.styledComponents || new ServerStyleSheet()
-
-    return (
-        &lt;StyleSheetManager sheet={context.styledComponents.instance}&gt;
-            ... router &gt; redux provider &gt; app
-        &lt;/StyleSheetManager&gt;
-    )
+reduxStore.dispatch(...)
+</code></pre><blockquote>
+<p>It is important that the store gets generated in a
+<a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures" target="_blank">closure</a>
+because of the shared nature of the NodeJS thread.</p>
+<p>This technique allow <strong>different SSR requests to scope their state</strong> correctly.</p>
+</blockquote>
+<h2 id="capabilities">Capabilities</h2>
+<ul>
+<li>Asynchronous actions with <a href="https://www.npmjs.com/package/redux-thunk" target="_blank">redux-thunks</a></li>
+<li><a href="https://www.npmjs.com/package/react-redux-feature" target="_blank">React features</a>:
+ more info <a href="../howto/features.html">here</a></li>
+<li><a href="https://chrome.google.com/webstore/detail/redux-devtools/lmhkpmbekcpmknklioeibfkpmmfibljd" target="_blank">Redux DevTools</a></li>
+<li><a href="create-ssr-context.html">SSR Context Reducer</a></li>
+</ul>
+<h2 id="arguments">Arguments</h2>
+<p>All the arguments are optional, but an app wouldn&apos;t make much sense without them.</p>
+<h3 id="reducers">reducers</h3>
+<pre><code>{
+    foo: state =&gt; state + 1,
+    fii: (state = {}, action) =&gt; { ... },
 }
-</code></pre><p>The <strong>second step</strong> is to inject all the inline styles in the resulting HTML. We do that
-as part of the app&apos;s configuration in <code>ssr/boot.js</code>:</p>
-<pre><code>...
-settings.express = {
+</code></pre><p>List of reducers that you want to enable.</p>
+<h3 id="features">features</h3>
+<pre><code>[
+    {
+        reducers: {},
+        services: [],
+        listeners: [],
+    },
     ...
-    ssr: {
-        ...
-        postprocessHtml: (html, { context }) =&gt;
-            (context &amp;&amp; context.styledComponents)
-                ? html.replace(&apos;&lt;/head&gt;&apos;, `${context.styledComponents.getStyleTags()}&lt;/head&gt;`)
-                : html,
-    }
+]
+</code></pre><p>List of features that you want to enable.</p>
+<h3 id="initialstate">initialState</h3>
+<pre><code>{
+    foo: 0,
 }
-</code></pre><hr>
-<p><strong>IMPORTANT:</strong> if you use the key <code>styledComponents</code> in your Root&apos;s context, you can
-<strong>skip step n.2</strong> as it is been added to the default HTML preparation logic
-starting from version 0.3.0 :-)</p>
-<hr>
-<p>If you want to get deeper into this, here is the <a href="https://github.com/styled-components/styled-components-website/blob/master/sections/advanced/server-side-rendering.md" target="_blank">link to the documentation page</a> 
-of styled-components.</p>
+</code></pre><p>Well... the initial state, right?</p>
+<h3 id="history">history</h3>
+<p>An instance of the <a href="https://www.npmjs.com/package/history" target="_blank">history</a> module to be used
+in combination with the <code>react-router</code> middleware and <code>redux-events-middleware</code>.</p>
+<h2 id="settings">settings</h2>
+<h3 id="globalstorename">globalStoreName</h3>
+<p>If <code>NODE_ENV === development</code> the Redux DevTools are enabled by default, plus the store
+is exposed in the global scope as <code>window[settings.globalStoreName]</code> for debugging
+purposes. Of course all of this is disabled in the server and production.</p>
+<p>Default value: <code>store</code></p>
+<h3 id="out">out</h3>
+<p>Allows to manipulate the components of the state before they are sent back to the app.
+By instance you can use this method to synchronize <code>react-router</code> with <code>redux</code>.</p>
+<h3 id="prependmiddlewares">prependMiddlewares</h3>
+<h3 id="appendmiddlewares">appendMiddlewares</h3>
+<h3 id="buildmiddlewares">buildMiddlewares</h3>
+<h3 id="prependenhancers">prependEnhancers</h3>
+<h3 id="appendenhancers">appendEnhancers</h3>
+<h3 id="buildenhancers">buildEnhancers</h3>
+<h3 id="appendreducers">appendReducers</h3>
 
                                 
                                 </section>
@@ -839,12 +863,12 @@ of styled-components.</p>
 
             
                 
-                <a href="services.html" class="navigation navigation-prev " aria-label="Previous page: Services">
+                <a href="./" class="navigation navigation-prev " aria-label="Previous page: API">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="../DEVELOPMENT.html" class="navigation navigation-next " aria-label="Next page: Development">
+                <a href="create-ssr-context.html" class="navigation navigation-next " aria-label="Next page: createSSRContext">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -855,7 +879,7 @@ of styled-components.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"SSR with Styled Components","level":"2.3","depth":1,"next":{"title":"Development","level":"3.1","depth":1,"path":"DEVELOPMENT.md","ref":"./DEVELOPMENT.md","articles":[]},"previous":{"title":"Services","level":"2.2","depth":1,"path":"articles/services.md","ref":"./articles/services.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"articles/styled-components.md","mtime":"2019-05-12T12:19:05.213Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-17T14:53:26.748Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"createSSRState","level":"4.1.1.1","depth":3,"next":{"title":"createSSRContext","level":"4.1.1.2","depth":3,"path":"api/create-ssr-context.md","ref":"./api/create-ssr-context.md","articles":[]},"previous":{"title":"API","level":"4.1.1","depth":2,"path":"api/README.md","ref":"./api/README.md","articles":[{"title":"createSSRState","level":"4.1.1.1","depth":3,"path":"api/create-ssr-state.md","ref":"./api/create-ssr-state.md","articles":[]},{"title":"createSSRContext","level":"4.1.1.2","depth":3,"path":"api/create-ssr-context.md","ref":"./api/create-ssr-context.md","articles":[]},{"title":"createSSRRender","level":"4.1.1.3","depth":3,"path":"api/create-ssr-render.md","ref":"./api/create-ssr-render.md","articles":[]},{"title":"createSSRRouter","level":"4.1.1.4","depth":3,"path":"api/create-ssr-router.md","ref":"./api/create-ssr-router.md","articles":[]},{"title":"Memcached","level":"4.1.1.5","depth":3,"path":"api/memcached.md","ref":"./api/memcached.md","articles":[]}]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/create-ssr-state.md","mtime":"2018-12-25T13:05:43.997Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-17T14:53:26.748Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>

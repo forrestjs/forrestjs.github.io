@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>SSR with Styled Components · GitBook</title>
+        <title>createSSRRouter · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -69,10 +69,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../DEVELOPMENT.html" />
+    <link rel="next" href="memcached.html" />
     
     
-    <link rel="prev" href="services.html" />
+    <link rel="prev" href="create-ssr-render.html" />
     
 
     </head>
@@ -147,9 +147,9 @@
         
         
     
-        <li class="chapter " data-level="2.1" data-path="reducers.html">
+        <li class="chapter " data-level="2.1" data-path="../articles/reducers.html">
             
-                <a href="reducers.html">
+                <a href="../articles/reducers.html">
             
                     
                     Reducers
@@ -160,9 +160,9 @@
             
         </li>
     
-        <li class="chapter " data-level="2.2" data-path="services.html">
+        <li class="chapter " data-level="2.2" data-path="../articles/services.html">
             
-                <a href="services.html">
+                <a href="../articles/services.html">
             
                     
                     Services
@@ -173,9 +173,9 @@
             
         </li>
     
-        <li class="chapter active" data-level="2.3" data-path="styled-components.html">
+        <li class="chapter " data-level="2.3" data-path="../articles/styled-components.html">
             
-                <a href="styled-components.html">
+                <a href="../articles/styled-components.html">
             
                     
                     SSR with Styled Components
@@ -227,9 +227,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="4.1.1" data-path="../api/">
+        <li class="chapter " data-level="4.1.1" data-path="./">
             
-                <a href="../api/">
+                <a href="./">
             
                     
                     API
@@ -241,9 +241,9 @@
             <ul class="articles">
                 
     
-        <li class="chapter " data-level="4.1.1.1" data-path="../api/create-ssr-state.html">
+        <li class="chapter " data-level="4.1.1.1" data-path="create-ssr-state.html">
             
-                <a href="../api/create-ssr-state.html">
+                <a href="create-ssr-state.html">
             
                     
                     createSSRState
@@ -254,9 +254,9 @@
             
         </li>
     
-        <li class="chapter " data-level="4.1.1.2" data-path="../api/create-ssr-context.html">
+        <li class="chapter " data-level="4.1.1.2" data-path="create-ssr-context.html">
             
-                <a href="../api/create-ssr-context.html">
+                <a href="create-ssr-context.html">
             
                     
                     createSSRContext
@@ -267,9 +267,9 @@
             
         </li>
     
-        <li class="chapter " data-level="4.1.1.3" data-path="../api/create-ssr-render.html">
+        <li class="chapter " data-level="4.1.1.3" data-path="create-ssr-render.html">
             
-                <a href="../api/create-ssr-render.html">
+                <a href="create-ssr-render.html">
             
                     
                     createSSRRender
@@ -280,9 +280,9 @@
             
         </li>
     
-        <li class="chapter " data-level="4.1.1.4" data-path="../api/create-ssr-router.html">
+        <li class="chapter active" data-level="4.1.1.4" data-path="create-ssr-router.html">
             
-                <a href="../api/create-ssr-router.html">
+                <a href="create-ssr-router.html">
             
                     
                     createSSRRouter
@@ -293,9 +293,9 @@
             
         </li>
     
-        <li class="chapter " data-level="4.1.1.5" data-path="../api/memcached.html">
+        <li class="chapter " data-level="4.1.1.5" data-path="memcached.html">
             
-                <a href="../api/memcached.html">
+                <a href="memcached.html">
             
                     
                     Memcached
@@ -759,7 +759,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >SSR with Styled Components</a>
+        <a href=".." >createSSRRouter</a>
     </h1>
 </div>
 
@@ -774,44 +774,117 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="styled-components">styled-components</h1>
-<p><a href="https://www.styled-components.com" target="_blank">styled-components</a> is a very nice styling library
-for React, and it is quite easy to have it SRRed using the app&apos;s context.</p>
-<p>The <strong>first step</strong> is to create a <code>StyleSheetManager</code> context for your app when it is
-handled by Node. Change your <code>index.ssr.js</code> like this:</p>
-<pre><code>...
-import { ServerStyleSheet, StyleSheetManager } from &apos;styled-components&apos;
-
-...
-const Root = ({ store, location, context, ...props }) =&gt; {
-    context.styledComponents = context.styledComponents || new ServerStyleSheet()
-
-    return (
-        &lt;StyleSheetManager sheet={context.styledComponents.instance}&gt;
-            ... router &gt; redux provider &gt; app
-        &lt;/StyleSheetManager&gt;
-    )
-}
-</code></pre><p>The <strong>second step</strong> is to inject all the inline styles in the resulting HTML. We do that
-as part of the app&apos;s configuration in <code>ssr/boot.js</code>:</p>
-<pre><code>...
-settings.express = {
+                                <h1 id="api---createssrrouter">API - createSSRRouter</h1>
+<p>Use this method to enable SSR in an ExpressJS app:</p>
+<pre><code>const app = express()
+app.use(createSSRRouter(
+    port: 8080,
     ...
-    ssr: {
-        ...
-        postprocessHtml: (html, { context }) =&gt;
-            (context &amp;&amp; context.styledComponents)
-                ? html.replace(&apos;&lt;/head&gt;&apos;, `${context.styledComponents.getStyleTags()}&lt;/head&gt;`)
-                : html,
-    }
-}
+))
+app.listen(8080)
+</code></pre><h2 id="settings">Settings</h2>
+<h3 id="enabled">enabled</h3>
+<pre><code>value:     (string) [yes|no]
+default:   &apos;yes&apos;
+env:       REACT_SSR_ENABLED
+</code></pre><p>Defines whether the ssr is enabled or not.<br>In case ssr is disabled the &quot;build&quot; folder is served as static files.</p>
+<h3 id="blacklist">blacklist</h3>
+<pre><code>value:     (string) comma separated string
+default:   &apos;&apos;
+env:       REACT_SSR_BLACKLIST
+</code></pre><p>Each item in the list is converted into an Express route that points to the
+static file resolver (it sends out &quot;build/index.html&quot;)</p>
+<p>NOTE: If you are using this setting in Node (no ENV variable) then you can
+use it as an Array:</p>
+<pre><code>...
+blacklist: [
+    &apos;/foo&apos;,
+    &apos;/user/:id&apos;,
+    ...
+]
+</code></pre><h3 id="shouldrender">shouldRender()</h3>
+<pre><code>value:     (function) can be async
+default:   null
+</code></pre><p>Example:<br>skip any route that contains &quot;/foo&quot;</p>
+<pre><code>...
+shouldRender: (req, res) =&gt; req.url.indexOf(&apos;/foo&apos;) === -1
+...
 </code></pre><hr>
-<p><strong>IMPORTANT:</strong> if you use the key <code>styledComponents</code> in your Root&apos;s context, you can
-<strong>skip step n.2</strong> as it is been added to the default HTML preparation logic
-starting from version 0.3.0 :-)</p>
+<h3 id="initialstate">initialState</h3>
+<p>Pass down an initial state before to apply server side rendering.</p>
+<pre><code>initialState: {
+    fooReducer: { ... }
+}
+</code></pre><h4 id="makessrinitialstate">makeSSRInitialState()</h4>
+<p>Allows to manipulate the initial state <strong>before</strong> to trigger the ssr.</p>
+<p><strong>NOTE:</strong> This kicks in at every request.</p>
+<pre><code>makeSSRInitialState(state, { req, res, next }) =&gt; state
+</code></pre><h4 id="makeappinitialstate">makeAPPInitialState()</h4>
+<p>Allows to manipulate the initial state <strong>after</strong> to trigger the ssr, just
+before the state is sent to the client.</p>
+<p><strong>NOTE:</strong> This kicks in at every request.</p>
+<pre><code>makeAPPInitialState(state, { req, res, next }) =&gt; state
+</code></pre><hr>
+<h3 id="entrypoint">entryPoint</h3>
+<pre><code>value:     (string)
+default:   &apos;index.ssr.js&apos;
+env:       REACT_SSR_ENTRY_POINT
+</code></pre><p>File path relative to the &quot;src&quot; folder that exports the server side render
+function created with <a href="create-ssr-render.html">createSSRRender</a>.</p>
+<h3 id="port">port</h3>
+<pre><code>value:     (string)
+default:   &apos;8080&apos;
+env:       REACT_SSR_PORT
+</code></pre><p>Port on which Express is listening. It is used to correctly configure the
+<a href="create-ssr-context.html">ssr context</a></p>
+<h3 id="disablejs">disableJS</h3>
+<pre><code>value:     (string) [yes|no]
+default:   &apos;no&apos;
+env:       REACT_SSR_DISABLE_JS
+</code></pre><p>If set to <code>yes</code> the resulting HTML is cleaned by any <code>&lt;script&gt;</code> tag and the result
+will be a <strong>completely server side rendering static website</strong>.</p>
+<h3 id="rendertimeout">renderTimeout</h3>
+<pre><code>value:     (number)
+default:   5000
+env:       REACT_SSR_RENDER_TIMEOUT
+</code></pre><p>Maximum amount of time that is given to a server side rendering.</p>
+<h3 id="renderlimit">renderLimit</h3>
+<pre><code>value:     (number)
+default:   10
+env:       REACT_SSR_RENDER_LIMIT
+</code></pre><p>Maximum amount of rendering passes in the server.<br>It makes it safe in case of server side rendering loops (es if you forget to await or
+if you await at each re-rendering).</p>
 <hr>
-<p>If you want to get deeper into this, here is the <a href="https://github.com/styled-components/styled-components-website/blob/master/sections/advanced/server-side-rendering.md" target="_blank">link to the documentation page</a> 
-of styled-components.</p>
+<h3 id="postprocesshtmlhtml-data">postprocessHtml(html, data)</h3>
+<p>Allows for fine tuning in the final HTML rendering process (before caching it).</p>
+<p><code>data</code> contains a number of useful staff (you better <code>console.log</code> it), but the
+most important is the application&apos;s <code>data.context</code> that you can exploit to pass
+informations from your ssr&apos;s Root element down to this function.</p>
+<h3 id="sendhtml">sendHtml</h3>
+<pre><code>value:     (string) [yes|no]
+default:   &apos;yes&apos;
+env:       REACT_SSR_SEND_HTML
+</code></pre><p>Defines wheather or not to <code>res.send(html)</code> after a ssr action ends.</p>
+<h4 id="datavar">dataVar</h4>
+<pre><code>value:     (string) [yes|no]
+default:   &apos;ssrOutput&apos;
+env:       REACT_SSR_DATA_VAR
+</code></pre><p>In case <code>sendHtml</code> is set to <code>no</code>, you can control in which variable you are
+going to receive the produced HTML and the relative data.</p>
+<pre><code>console.log(req.ssrOutput)
+</code></pre><p><strong>NOTE:</strong> Use <code>sendHtml</code> and <code>dataVar</code> to handle custom post processing. In this
+case you also need to manually handle the caching of the request.</p>
+<hr>
+<h3 id="root">root</h3>
+<p>Absolute path to the project root.<br>Default to the <code>process.cwd()</code>.</p>
+<h3 id="src">src</h3>
+<p>Absoltue path to the client source folder.<br>Defaults to <code>root/src</code>.</p>
+<h3 id="build">build</h3>
+<p>Absolute path to the client bundles.<br>Defaults to <code>root/build</code>.</p>
+<h3 id="buildsrc">buildSrc</h3>
+<p>Absolute path to the transpiled client source folder.<br>Defaults to <code>root/build-src</code>.</p>
+<h3 id="buildssr">buildSsr</h3>
+<p>Absolute path to the transpiled backend source folder.<br>Defaults to <code>root/build-ssr</code>.</p>
 
                                 
                                 </section>
@@ -839,12 +912,12 @@ of styled-components.</p>
 
             
                 
-                <a href="services.html" class="navigation navigation-prev " aria-label="Previous page: Services">
+                <a href="create-ssr-render.html" class="navigation navigation-prev " aria-label="Previous page: createSSRRender">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="../DEVELOPMENT.html" class="navigation navigation-next " aria-label="Next page: Development">
+                <a href="memcached.html" class="navigation navigation-next " aria-label="Next page: Memcached">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -855,7 +928,7 @@ of styled-components.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"SSR with Styled Components","level":"2.3","depth":1,"next":{"title":"Development","level":"3.1","depth":1,"path":"DEVELOPMENT.md","ref":"./DEVELOPMENT.md","articles":[]},"previous":{"title":"Services","level":"2.2","depth":1,"path":"articles/services.md","ref":"./articles/services.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"articles/styled-components.md","mtime":"2019-05-12T12:19:05.213Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-17T14:53:26.748Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"createSSRRouter","level":"4.1.1.4","depth":3,"next":{"title":"Memcached","level":"4.1.1.5","depth":3,"path":"api/memcached.md","ref":"./api/memcached.md","articles":[]},"previous":{"title":"createSSRRender","level":"4.1.1.3","depth":3,"path":"api/create-ssr-render.md","ref":"./api/create-ssr-render.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/create-ssr-router.md","mtime":"2019-05-12T12:05:08.845Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-17T14:53:26.748Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
