@@ -17,6 +17,14 @@
     
             
                 
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-add-js-css/c0a19cc241965e19c45060304d40c6e5-forrestjs.css">
+                
+            
+                
+                <link rel="stylesheet" href="gitbook/gitbook-plugin-insert-logo/plugin.css">
+                
+            
+                
                 <link rel="stylesheet" href="gitbook/gitbook-plugin-code/plugin.css">
                 
             
@@ -735,12 +743,10 @@ based on the NodeJS/React stack.</p>
 <h2 id="try-out-a-universal-app-very-quikly">Try out a Universal app very quikly</h2>
 <p>Create a new universal app from the standard boilerplate:
 (it&apos;s going to take a minute to install the dependencies)</p>
-<pre><code>npx forrest my-new-ssr-app
-</code></pre><p>Run the app in production mode: 
-(it&apos;s going to take a minute to build the artifacts)</p>
-<pre><code>cd my-new-ssr-app
-npm run start:prod
-</code></pre><p>Go to <a href="http://localhost:8080" target="_blank">http://localhost:8080</a> and see it in action!</p>
+<pre><code>npx forrest run my-new-ssr-app
+</code></pre><p>This is going to take a minute to install all the dependencies and build
+the project, plus you need NodeJS 10.x or greater. But don&apos;t worry</p>
+<p>Go to <a href="http://localhost:8080" target="_blank">http://localhost:8080</a> and see it in action!</p>
 <h2 id="what-you-get">What you get</h2>
 <ul>
 <li>React/Redux store ready for ssr, yes, with built-in server memory scope</li>
@@ -892,7 +898,7 @@ you have a basic understanding of how to use them.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"give us a star on GitHub!","level":"1.2","depth":1,"url":"https://github.com/forrestjs/core","ref":"https://github.com/forrestjs/core","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["code","collapsible-menu"],"pluginsConfig":{"code":{"copyButtons":true},"collapsible-menu":{},"highlight":{},"search":{},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"fontsettings":{"theme":"white","family":"sans","size":2},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2019-05-14T14:06:53.343Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-14T14:13:11.737Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Introduction","level":"1.1","depth":1,"next":{"title":"give us a star on GitHub!","level":"1.2","depth":1,"url":"https://github.com/forrestjs/core","ref":"https://github.com/forrestjs/core","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"./images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"./images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2019-05-17T13:56:24.223Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-17T13:58:38.064Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
@@ -900,6 +906,10 @@ you have a basic understanding of how to use them.</p>
         
     <script src="gitbook/gitbook.js"></script>
     <script src="gitbook/theme.js"></script>
+    
+        
+        <script src="gitbook/gitbook-plugin-insert-logo/plugin.js"></script>
+        
     
         
         <script src="gitbook/gitbook-plugin-code/plugin.js"></script>

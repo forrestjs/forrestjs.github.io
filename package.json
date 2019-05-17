@@ -20,18 +20,12 @@
   },
   "author": "Marco Pegoraro",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/forrestjs/gitbook/issues"
-  },
-  "homepage": "https://forrestjs.github.io",
-  "keywords": [
-    "react",
-    "ssr",
-    "redux",
-    "universal",
-    "server side rendering"
-  ],
-  "devDependencies": {
-    "gitbook-cli": "^2.3.2"
+  "dependencies": {
+    "gitbook-cli": "^2.3.2",
+    "gitbook-plugin-add-js-css": "^0.0.1",
+    "gitbook-plugin-code": "^0.1.0",
+    "gitbook-plugin-collapsible-menu": "^1.0.3",
+    "gitbook-plugin-custom-favicon": "^0.0.4",
+    "gitbook-plugin-insert-logo": "^0.1.5"
   }
 }
