@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Create React App Universal · GitBook</title>
+        <title>Create React App > Universal · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -150,7 +150,7 @@
                 <a href="cra-ssr.html">
             
                     
-                    Create React App Universal
+                    Create React App > Universal
             
                 </a>
             
@@ -777,7 +777,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Create React App Universal</a>
+        <a href=".." >Create React App > Universal</a>
     </h1>
 </div>
 
@@ -792,42 +792,53 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="create-react-app-universal">Create React App Universal</h1>
-<p>In this step-by-step tutorial you are going to take a <strong>Create React App</strong>
-boilerplate, and turn it into a fully featured Universal PWA with 
-<strong>Server Side Rendering</strong>, a GraphQL API, code splitting and routing.</p>
-<p><strong>NOTE:</strong> If you just want to enjoy a ready-to-use setup type:</p>
-<pre><code>  npx forrest run cra-ssr -p 8080
-</code></pre><h3 id="step-n1">Step n.1</h3>
-<p>The entire set of examples assume that you are going to use
-<a href="https://facebook.github.io/create-react-app/" target="_blank">create-react-app</a>
-as boilerplate for you application, so the first step would be to initialize a new
-CRA project (*):</p>
-<pre><code>npx create-react-app cra-ssr
-</code></pre><h3 id="step-n2">Step n.2</h3>
-<p>Now you can <code>cd</code> into your project and install some <code>ForrestJS</code> modules:</p>
-<pre><code>cd cra-ssr
-yarn add @forrestjs/package-universal
+                                <h1 id="create-react-app--universal">Create React App &gt; Universal</h1>
+<p>In this step-by-step tutorial you are going to take a 
+<a href="https://facebook.github.io/create-react-app/" target="_blank">Create React App (CRA)</a>
+app, and turn it into a fully featured 
+<strong>Universal PWA with server-side rendering</strong>,
+served by an <a href="https://expressjs.com" target="_blank">ExpressJS</a> server.</p>
+<blockquote>
+<p><strong>NOTE:</strong><br>
+If you just want to enjoy a ready-to-use and feature-rich app, type this in a terminal:<br>
+<code>npx forrest run my-new-universal-cra -p 8080</code></p>
+</blockquote>
+<h2 id="step-n1---kickoff-your-cra">Step n.1 - Kickoff your CRA</h2>
+<p>Initialize a new CRA project (*):</p>
+<pre><code>npx create-react-app my-new-universal-cra &amp;&amp; \
+cd my-new-universal-cra
+</code></pre><h2 id="step-n2---add-a-few-dependencies">Step n.2 - Add a few Dependencies</h2>
+<p>Now install some <code>ForrestJS</code> modules:<br>
+(I personally use <a href="https://yarnpkg.com" target="_blank"><code>yarn</code></a> because is much faster than <code>npm</code>)</p>
+<pre><code>yarn add @forrestjs/package-universal &amp;&amp; \
 yarn add @forrestjs/package-universal-dev -D
-</code></pre><h2 id="npm-scripts">NPM Scripts</h2>
-<p>So far we just installed dependencies so the basic scripts that were created by
-<code>create-react-app</code> are in place with their default behaviour.</p>
+</code></pre><blockquote>
+<p>The <code>package-universal</code> contains a set of common dependencies like <em>React</em>, <em>Express</em>,
+<em>react-router</em>, ect... We work hard to keep all the internal versions up-to-date
+so you can enjoy and <strong>update just this package</strong> :-)</p>
+</blockquote>
+<h2 id="about-npm-scripts">About NPM Scripts</h2>
+<p>So far we just installed dependencies so the basic <em>package.json scripts</em> that were created 
+by <code>create-react-app</code> are in place with their default behaviour.</p>
 <p><strong>This will not change during the course of this tutorial :-)</strong></p>
 <p>I really like the idea of having a common ground in <code>create-react-app</code> (even if I
 don&apos;t share all the decisions they made!) and I did my best to provide a simple
 way to enrich that basic ground without breaking it.</p>
 <p>With all that said, you can spin up your app:</p>
 <pre><code>  npm start
-</code></pre><p><img src="../images/react-ssr__start.png" alt="npm start"></p>
-<h2 id="lets-server-side-render">Let&apos;s Server Side Render!</h2>
+</code></pre><p><img src="../images/react-ssr__start.png" alt="npm start - output"></p>
+<h2 id="step-n3---lets-server-side-render">Step n.3 - Let&apos;s Server-Side Render!</h2>
 <p>In order to implement SSR with ForrestJS you are going to need 3 things:</p>
 <ol>
-<li>A Sever Side entry point for your app</li>
+<li>A Sever-Side entry point for your App</li>
 <li>A NodeJS server - we&apos;ll use ExpressJS</li>
 <li>Some @babel support for our server side code (I love ES6, you?)</li>
 </ol>
-<h3 id="server-side-entry-point">Server Side Entry Point</h3>
-<p>Create <code>src/index.ssr.js</code>:</p>
+<h3 id="server-side-entry-point">Server-Side Entry Point</h3>
+<p>Create the App&apos;s server side entry point:</p>
+<pre><code class="lang-bash">vi src/index.ssr.js
+</code></pre>
+<p>and paste this code into it:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">import</span> { createSSRRender } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;@forrestjs/core/lib/create-ssr-render&apos;</span>
 
 <span class="hljs-comment">// project specific modules</span>
@@ -837,7 +848,10 @@ way to enrich that basic ground without breaking it.</p>
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> staticRender = createSSRRender(App)
 </code></pre>
 <h3 id="modular-nodejs-server">Modular NodeJS Server</h3>
-<p>Create <code>server.js</code>:</p>
+<p>Create the Express server entry point:</p>
+<pre><code class="lang-bash">vi server.js
+</code></pre>
+<p>and paste this code into it:</p>
 <pre><code class="lang-js"><span class="hljs-comment">// Makes NodeJS understand ES6</span>
 process.env.NODE_ENV = <span class="hljs-string">&apos;development&apos;</span>
 <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@babel/polyfill&apos;</span>)
@@ -854,8 +868,11 @@ process.env.NODE_ENV = <span class="hljs-string">&apos;development&apos;</span>
     .createHookApp({ services })()
     .catch(err =&gt; <span class="hljs-built_in">console</span>.log(err.message))
 </code></pre>
-<h3 id="babel-up-and-go">Babel up and go!</h3>
-<p>Edit <code>package.json</code>:</p>
+<h3 id="babel-up-and-go">Babel up and Go!</h3>
+<p>Edit your <code>package.json</code>:</p>
+<pre><code class="lang-bash">vi package.json
+</code></pre>
+<p>and add the <code>babel</code> section and the <code>serve</code> script:</p>
 <pre><code class="lang-json"><span class="hljs-string">&quot;babel&quot;</span>: {
   <span class="hljs-string">&quot;presets&quot;</span>: [
     <span class="hljs-string">&quot;@forrestjs/babel-preset-universal&quot;</span>
@@ -866,12 +883,16 @@ process.env.NODE_ENV = <span class="hljs-string">&apos;development&apos;</span>
     ...
 }
 </code></pre>
-<p>And run:</p>
+<p>It&apos;s finally time to run the App:</p>
 <pre><code>yarn serve
-</code></pre><p>You should now be enjoying a Server Side Rendered Create React App (or <code>SSRCRA</code> fo the whom who
+</code></pre><p>You should now be enjoying a server-side rendered Create React App (or <code>CRA-SSR</code> for the whom who
 like acronyms :-).</p>
 <p>It looks exactly like the client side rendered that you get with <code>yarn start</code>, but it&apos;s
 server-side rendered. You can look at the page&apos;s source and spot some content within the HTML.</p>
+<p><img src="../images/react-ssr__html.png" alt="npm serve - output"></p>
+<p>This is going to be a hell of an improvement if you are targeting Google&apos;s bot as a steady
+visitor of your website/PWA.</p>
+<p>In the next lesson you are going to <strong>fix some headers</strong> and <strong>add some routes</strong>.</p>
 <h2 id="react-scripts-rewired">(*) react-scripts-rewired</h2>
 <p>Most of the examples work with the default setup, but when it comes to
 the <strong>server side rendering of an application that implements code splitting</strong> with
@@ -925,7 +946,7 @@ our project to extend the default configuration:</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Create React App Universal","level":"2.1","depth":1,"next":{"title":"Reducers","level":"3.1","depth":1,"path":"articles/reducers.md","ref":"./articles/reducers.md","articles":[]},"previous":{"title":"install from NPM","level":"1.3","depth":1,"url":"https://www.npmjs.com/package/forrest","ref":"https://www.npmjs.com/package/forrest","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/cra-ssr.md","mtime":"2019-05-21T09:50:12.359Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-21T09:52:08.253Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Create React App > Universal","level":"2.1","depth":1,"next":{"title":"Reducers","level":"3.1","depth":1,"path":"articles/reducers.md","ref":"./articles/reducers.md","articles":[]},"previous":{"title":"install from NPM","level":"1.3","depth":1,"url":"https://www.npmjs.com/package/forrest","ref":"https://www.npmjs.com/package/forrest","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/cra-ssr.md","mtime":"2019-05-21T14:21:35.092Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-21T14:22:24.569Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
