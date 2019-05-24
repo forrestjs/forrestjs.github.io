@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Add GraphQL · GitBook</title>
+        <title>Create React App > Redux · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -69,10 +69,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="graphql-setup.html" />
+    <link rel="next" href="../articles/reducers.html" />
     
     
-    <link rel="prev" href="eslint.html" />
+    <link rel="prev" href="cra-ssr.html" />
     
 
     </head>
@@ -160,7 +160,7 @@
             
         </li>
     
-        <li class="chapter " data-level="2.2" data-path="cra-redux.html">
+        <li class="chapter active" data-level="2.2" data-path="cra-redux.html">
             
                 <a href="cra-redux.html">
             
@@ -681,7 +681,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="5.1.2.8" data-path="graphql.html">
+        <li class="chapter " data-level="5.1.2.8" data-path="graphql.html">
             
                 <a href="graphql.html">
             
@@ -792,7 +792,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Add GraphQL</a>
+        <a href=".." >Create React App > Redux</a>
     </h1>
 </div>
 
@@ -807,27 +807,152 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="add-graphql">Add GraphQL</h1>
-<p>In the <a href="router.html">add React Router</a> tutorial we introduced a few more <em>HTTP Requests</em>
-toward <a href="https://jsonplaceholder.typicode.com" target="_blank">jsonplaceholder</a> in order to fetch a rich
-set of user&apos;s details.</p>
+                                <h1 id="create-react-app--redux">Create React App &gt; Redux</h1>
+<p>In this step-by-step tutorial you are going to add <a href="https://redux.js.org/" target="_blank">Redux</a> to
+<a href="cra-ssr.html">the <em>Universal CRA</em> that you have set up in the previous chapter</a>. You
+can <a href="../downloads/cra-ssr.zip">download the codebase here</a>.</p>
+<h2 id="step-n1---create-a-redux-store">Step n.1 - Create a Redux Store</h2>
+<p>Setting up a Redux store is often referred to as an overhelming task.</p>
+<p>We think we managed to simplify this process a lot in <em>ForrestJS</em> by exposing a 
+utility method that injest your reducers and returns a store that is fully featured with
+stuff like <a href="https://www.npmjs.com/package/redux-thunk" target="_blank">redux-thunk</a> 
+and <a href="https://www.npmjs.com/package/redux-devtools" target="_blank">Redux DevTools</a>.</p>
+<p>In this first tutorial you are going to use the <code>createSSRState()</code> in the easiest
+of the possible way:<br><strong>JUST ADD REDUCERS TO IT</strong>. </p>
 <blockquote>
-<p>Each time you open a user&apos;s page the app makes 3 calls.<br><strong>Highly inefficient</strong>. Isn&apos;t it?</p>
+<p>This suits 90% of the apps that I write.</p>
 </blockquote>
-<p>In this tutorial we will move the external data fetching responsability to our backend,
-so that the client will only have to deal with simple &quot;app-to-app&quot; API calls.</p>
-<h2 id="where-to-start">Where to start?</h2>
-<p>This tutorial assumes that you went through the <a href="router.html">react-router tutorial</a>
-and have a fully working app. You can always download the ready to use boilerplate
-<a href="https://github.com/marcopeg/react-ssr/raw/master/examples/cra-ssr-router.zip" target="_blank">here</a>.</p>
+<p>But keep in mind that <strong>this is a highly extensible tool</strong> and you can configure it 
+with new middlewares, decorators and basically any kind of extension that you may need.</p>
+<p>Create <code>src/redux-store.js</code>:</p>
+<pre><code class="lang-bash">vi src/redux-store.js
+</code></pre>
+<p>and paste this code into it:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">import</span> createSSRState <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;@forrestjs/core/lib/create-ssr-state&apos;</span>
+
+<span class="hljs-keyword">const</span> app = () =&gt; ({
+    name: <span class="hljs-string">&apos;My New Universal CRA&apos;</span>,
+})
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> createSSRState({ app })
+</code></pre>
+<p>It is worth noticing that <code>createSSRState()</code> <strong>is a function that returns a NEW store</strong>
+configured to suit your needs. Every time you call it it will generate a brand new store.</p>
+<p>This behaviour is <strong>crucial to Server-Side Rendering</strong> as you really need to 
+<strong>protect the <em>execution context</em></strong> of you app in Node.</p>
+<p><em>ForrestJS</em> takes care of this for you. Just remember that any piece of information that 
+you put in <strong>the Redux store is scoped to each server request</strong> by design, making it
+the safest place where to actually store data.</p>
+<h2 id="step-n2---provide-your-client-entry-point">Step n.2 - Provide your Client entry point</h2>
+<p>Now is time to provide our App&apos;s entry point with the Redux store, so that
+you can use the <code>connect()</code> method to withdraw informations from it.</p>
+<p>Open <code>src/index.js</code>:</p>
+<pre><code class="lang-bash">vi src/index.js
+</code></pre>
+<p>then find the line:</p>
+<pre><code class="lang-js">ReactDOM.render(<span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">App</span> /&gt;</span>, document.getElementById(&apos;root&apos;));
+</span></code></pre>
+<p>and replace with:</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">import</span> { Provider } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react-redux&apos;</span>;
+<span class="hljs-keyword">import</span> createState <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./redux-store&apos;</span>;
+
+<span class="hljs-keyword">const</span> Root = ({ store, ...props }) =&gt; (
+    &lt;Provider store={store}&gt;
+        &lt;App {...props} /&gt;
+    &lt;/Provider&gt;
+);
+
+createState()
+    .then(props =&gt; ReactDOM.render(&lt;Root {...props} /&gt;, document.getElementById(&apos;root&apos;)))
+    .catch(err =&gt; console.error(err));
+</code></pre>
+<p>It is worth noticing that <strong>the <code>createState()</code> function is <em>asynchronous</em></strong>. I don&apos;t
+really want to go deep into details in this tutorial, but just keep in mind that your
+Application&apos;s state is capable of doing <strong>asynchronous booting operations</strong> :-)</p>
+<h2 id="step-n3---provide-your-universal-entry-point">Step n.3 - Provide your Universal entry point</h2>
+<p>We need to modify the Server-Side entry point in a very similar way. No big deal.</p>
+<p>Open <code>src/index.ssr.js</code>:</p>
+<pre><code class="lang-bash">vi src/index.ssr.js
+</code></pre>
+<p>find the line:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> staticRender = createSSRRender(App)
+</code></pre>
+<p>and replace with:</p>
+<pre><code class="lang-jsx"><span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react&apos;</span>
+<span class="hljs-keyword">import</span> { Provider } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react-redux&apos;</span>
+<span class="hljs-keyword">import</span> createState <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;./redux-store&apos;</span>
+
+<span class="hljs-keyword">const</span> Root = ({ store, ...props }) =&gt; (
+    <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Provider</span> <span class="hljs-attr">store</span>=<span class="hljs-string">{store}</span>&gt;</span>
+        <span class="hljs-tag">&lt;<span class="hljs-name">App</span> {<span class="hljs-attr">...props</span>} /&gt;</span>
+    <span class="hljs-tag">&lt;/<span class="hljs-name">Provider</span>&gt;</span>
+);
+
+export const staticRender = createSSRRender(Root, { createState })
+</span></code></pre>
 <blockquote>
-<p>I&apos;ve actually extended the
-<a href="https://github.com/marcopeg/react-ssr/raw/master/examples/cra-ssr-eslint.zip" target="_blank">customize ESLint</a>
-boilerplate. I suggest you start from that one.</p>
+<p><strong>Why do you duplicate the <code>Root</code> component&apos;s code?</strong><br>I&apos;m glad you asked!</p>
 </blockquote>
-<h2 id="tutorial-codebase">Tutorial Codebase</h2>
-<p>As always, you can <a href="https://github.com/marcopeg/react-ssr/raw/master/examples/cra-ssr-graphql.zip" target="_blank">download the boilerplate</a>.
-where you will find all the files discussed in this page.</p>
+<p>In one of the tutorials ahead you are going to add
+<a href="https://reacttraining.com/react-route" target="_blank">react-router</a> to your app.</p>
+<p>At that point the <code>Root</code> component that runs in the server-side rendering will need 
+a special version of the <em>router provider</em> called <code>StaticRouter</code>, while the
+client-side version need the normal <code>Router</code> and a <code>history</code> component that
+is capable of using the
+<a href="https://developer.mozilla.org/en-US/docs/Web/API/History" target="_blank">browser&apos;s history API</a>.</p>
+<p>In this tutorial we are laying down the fundations for that implementation.</p>
+<h2 id="step-n4---use-the-apps-reducer-info">Step n.4 - Use the App&apos;s reducer info</h2>
+<p>It&apos;s now time to use the Redux store we built and render the App&apos;s name
+into the UI.</p>
+<p>You are going to make a few changes to <code>src/App.js</code>, but if
+you are already familiar with Redux, you have probably already done it :-)</p>
+<pre><code class="lang-bash">vi src/App..js
+</code></pre>
+<p>find:</p>
+<pre><code class="lang-js"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params"></span>) </span>{
+</code></pre>
+<p>and replace with:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">import</span> { connect } <span class="hljs-keyword">from</span> <span class="hljs-string">&apos;react-redux&apos;</span>;
+
+<span class="hljs-keyword">const</span> mapState = ({ app }) =&gt; ({
+  name: app.name,
+});
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">App</span>(<span class="hljs-params">{ name }</span>) </span>{
+</code></pre>
+<p>then find:</p>
+<pre><code class="lang-js">Learn React
+</code></pre>
+<p>and replace it with:</p>
+<pre><code class="lang-js">{name}
+</code></pre>
+<p><strong>finally</strong> find:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> App;
+</code></pre>
+<p>and replace it with:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> connect(mapState)(App);
+</code></pre>
+<h2 id="test-it-out">Test it out!</h2>
+<p>Now it&apos;s time to run:</p>
+<pre><code class="lang-bash">yarn start
+</code></pre>
+<p>And enjoy your Redux&apos;s state manager working, and the Redux DevTools magically
+set up for you.</p>
+<p><img src="../images/cra-redux.png" alt="cra-redux"></p>
+<p>And you should also test it Server Side Rendered:</p>
+<pre><code class="lang-bash">yarn serve
+</code></pre>
+<p><img src="../images/cra-redux-ssr.png" alt="cra-redux"></p>
+<h2 id="download">Download</h2>
+<p>If you experienced any trouble following the steps above, 
+<a href="../downloads/cra-redux.zip">download this tutorial codebase here</a>.</p>
+<h2 id="the-next-step">The Next Step</h2>
+<p><em>ForrestJS</em>&apos;s Redux setup ships with an intersting feature which is called...
+<a href="https://www.npmjs.com/package/react-redux-feature" target="_blank">react-redux-feature</a>.</p>
+<p>It basically provides a simple indication how to organize your application into
+smaller pieces - the <em>features</em> - and how to let them talk together in a nice
+and predictable way.</p>
+<p>Waait for it...</p>
 
                                 
                                 </section>
@@ -855,12 +980,12 @@ where you will find all the files discussed in this page.</p>
 
             
                 
-                <a href="eslint.html" class="navigation navigation-prev " aria-label="Previous page: Customize ESLint">
+                <a href="cra-ssr.html" class="navigation navigation-prev " aria-label="Previous page: Create React App > Universal">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="graphql-setup.html" class="navigation navigation-next " aria-label="Next page: setup">
+                <a href="../articles/reducers.html" class="navigation navigation-next " aria-label="Next page: Reducers">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -871,7 +996,7 @@ where you will find all the files discussed in this page.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Add GraphQL","level":"5.1.2.8","depth":3,"next":{"title":"setup","level":"5.1.2.8.1","depth":4,"path":"howto/graphql-setup.md","ref":"./howto/graphql-setup.md","articles":[]},"previous":{"title":"Customize ESLint","level":"5.1.2.7","depth":3,"path":"howto/eslint.md","ref":"./howto/eslint.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/graphql.md","mtime":"2018-12-24T16:16:12.601Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-24T11:44:07.774Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Create React App > Redux","level":"2.2","depth":1,"next":{"title":"Reducers","level":"3.1","depth":1,"path":"articles/reducers.md","ref":"./articles/reducers.md","articles":[]},"previous":{"title":"Create React App > Universal","level":"2.1","depth":1,"path":"howto/cra-ssr.md","ref":"./howto/cra-ssr.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/cra-redux.md","mtime":"2019-05-24T11:41:07.744Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-24T11:44:07.774Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
