@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Babel setup (transpiler) · GitBook</title>
+        <title>Hooks, for composable NodeJS Apps · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -69,10 +69,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="ssr-npm-dependencies.html" />
+    <link rel="next" href="../articles/reducers.html" />
     
     
-    <link rel="prev" href="ssr-folders.html" />
+    <link rel="prev" href="cra-redux.html" />
     
 
     </head>
@@ -173,7 +173,7 @@
             
         </li>
     
-        <li class="chapter " data-level="2.3" data-path="hooks.html">
+        <li class="chapter active" data-level="2.3" data-path="hooks.html">
             
                 <a href="hooks.html">
             
@@ -501,7 +501,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="5.1.2.3.2" data-path="ssr-babel.html">
+        <li class="chapter " data-level="5.1.2.3.2" data-path="ssr-babel.html">
             
                 <a href="ssr-babel.html">
             
@@ -805,7 +805,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Babel setup (transpiler)</a>
+        <a href=".." >Hooks, for composable NodeJS Apps</a>
     </h1>
 </div>
 
@@ -820,43 +820,158 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="ssr---babel-setup-transpiler">SSR - Babel Setup (transpiler)</h1>
-<p>Create <code>/.babelrc</code>:</p>
-<pre><code>{
-    &quot;presets&quot;: [
-        &quot;@babel/preset-env&quot;,
-        &quot;@babel/preset-react&quot;
-    ],
-    &quot;plugins&quot;: [
-        &quot;babel-plugin-dynamic-import-node-babel-7&quot;,
-        &quot;react-loadable/babel&quot;
-    ],
-    &quot;env&quot;: {
-        &quot;node&quot;: {
-            &quot;plugins&quot;: [
-                [
-                    &quot;babel-plugin-transform-require-ignore&quot;,
-                    { &quot;extensions&quot;: [ &quot;.css&quot;, &quot;.less&quot;, &quot;.sass&quot;, &quot;.styl&quot; ] }
-                ]
-            ]
-        }
-    }
-}
-</code></pre><h3 id="why-babel">why Babel?</h3>
-<p>With SSR we render React in our Node app, that means that we need to transpile
-some part of our client codebase. For sure we need to transpile JSX, but you might
-have in place some weird thing in Webpack as well, and Babel would have to take
-care of that.</p>
+                                <h1 id="hooks---a-truly-modular-nodejs-app">Hooks - A truly modular NodeJS App</h1>
+<p>Writing apps in NodeJS is fun and quite easy.</p>
+<p><code>require()</code> and <code>import</code> are the building blocks for <strong>structuring your codebase 
+in modules</strong> and let them talk with each other. <a href="https://npmjs.com" target="_blank">NPM</a> let you 
+share and reuse bigger blocks of logic. Great stuff.</p>
+<p>Nevertheless, it&apos;s always beed a struggle to organize our codebase into blocks that
+represent relevant business logic. So to speak, <strong>features that a customer is
+willing to pay for</strong>.</p>
+<p>Here is a simplicistic implementation of an app that should be able to
+<strong>sum two integers</strong>:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;express&apos;</span>)
+<span class="hljs-keyword">const</span> app = express()
+<span class="hljs-keyword">const</span> port = process.env.PORT || <span class="hljs-number">8080</span>
+
+app.get(<span class="hljs-string">&apos;/:p1/:p2&apos;</span>, (req, res) =&gt; {
+    <span class="hljs-keyword">const</span> { p1, p2 } = req.params
+    <span class="hljs-keyword">const</span> sum = <span class="hljs-built_in">Number</span>(p1) + <span class="hljs-built_in">Number</span>(p2)
+    res.send(<span class="hljs-string">`<span class="hljs-subst">${p1}</span> + <span class="hljs-subst">${p2}</span> = <span class="hljs-subst">${sum}</span>`</span>)
+})
+
+app.listen(port, () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Running...&apos;</span>))
+</code></pre>
+<p>This works and it is not much code, but if you focus on the business requirement:</p>
 <blockquote>
-<p>For instance, is not uncommon for React apps to use ES6 <code>class</code> syntax, likely
-in combination with <code>class properties</code>.</p>
+<p>sum two integers</p>
 </blockquote>
-<p>In a normal NodeJS project I would suggest not to implement fancy transpile layers
-as with Node 10.x came a good deal of new supported syntaxes. But as we are going to 
-merge client and server, in this tutorial I&apos;m going to fully use ES6 and Javascript 
-modules (import/export) and that means that I need to transpile some stuff. </p>
-<p>The main tool is <a href="">Babel</a> with some plugins applied to it. Babel is going to be
-responsible for translating our ES6 app into NodeJS.</p>
+<p>you quikly find out that the only relevant piece of code would be:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> sum = <span class="hljs-built_in">Number</span>(p1) + <span class="hljs-built_in">Number</span>(p2)
+</code></pre>
+<p>Ok, this is quite a strict interpretation. Let&apos;s say that the code that is relevant
+to the business requirement is more likely something like this:</p>
+<p><img src="../images/hooks-server-code1.png" alt="Business related code"></p>
+<p>after all, all we want to achieve is something like that:</p>
+<p><img src="../images/hooks-server-app1.png" alt="Final result"></p>
+<p>If you are a little bit like me, you find yourself writing - or copying -
+<em>Express</em> (or <em>Koa</em> or whatever...) setup scripts over and over, project by
+project.</p>
+<p>This structural code has the following charateristics:</p>
+<ol>
+<li>it is almost always the same</li>
+<li>it doesn&apos;t contribute to the business requirement</li>
+<li>nothign work without it</li>
+</ol>
+<h2 id="wordpress-almost-nailed-it">WordPress almost nailed it...</h2>
+<p>Engineers at WordPress found out long time ago that <strong>the value of a platform roots
+in its capablity to run external plugins</strong>. WordPress wouldn&apos;t be WordPress without
+a rich plugins echosystem.</p>
+<p>WordPress provides you with some <em>core functionalities</em> and a huge amount of
+<strong>extension points</strong>. You can write a file that basically asks WP to:</p>
+<blockquote>
+<p>When &quot;X&quot; happens, please run my code</p>
+</blockquote>
+<p>And this is the good side of it.</p>
+<p>You can pack your business logic in a plugin (or theme) that runs on top of all the
+&quot;stuff&quot; of which WordPress is made. Stuff that you and me don&apos;t even need to care 
+so much.</p>
+<p>The flipside is that you have plugins that hook into WordPress, plugins that hook into
+plugins that hook into WordPress... and so on.</p>
+<p><strong>It is a hard job to trace and debug plugin composability.</strong></p>
+<h2 id="welcome-forrestjshooks--">Welcome <code>@forrestjs/hooks</code> :-)</h2>
+<p><code>@forrestjs/hooks</code> is a small library that enable <strong>traceable composability</strong> in your
+Javascript application.</p>
+<p>With the hooks you can refactor the code we saw earlies into this:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { runHookApp, createHook, START_SERVICES } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/hooks&apos;</span>)
+
+<span class="hljs-keyword">const</span> expressService = () =&gt; {
+    <span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;express&apos;</span>)
+    <span class="hljs-keyword">const</span> app = express()
+    <span class="hljs-keyword">const</span> port = process.env.PORT || <span class="hljs-number">8080</span>
+
+    <span class="hljs-comment">// Allows for other features to hook into</span>
+    <span class="hljs-comment">// the Express app and provide their own custom logic</span>
+    createHook(<span class="hljs-string">&apos;express&apos;</span>, { args: { app }})
+
+    app.listen(port, () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Running...&apos;</span>))
+}
+
+<span class="hljs-keyword">const</span> featureSum = ({ app }) =&gt;
+    app.get(<span class="hljs-string">&apos;/:p1/:p2&apos;</span>, (req, res) =&gt; {
+        <span class="hljs-keyword">const</span> { p1, p2 } = req.params
+        <span class="hljs-keyword">const</span> sum = <span class="hljs-built_in">Number</span>(p1) + <span class="hljs-built_in">Number</span>(p2)
+        res.send(<span class="hljs-string">`<span class="hljs-subst">${p1}</span> + <span class="hljs-subst">${p2}</span> = <span class="hljs-subst">${sum}</span>`</span>)
+    })
+
+runHookApp([
+    [ START_SERVICES, expressService ],
+    [ <span class="hljs-string">&apos;express&apos;</span>, featureSum ],
+])
+</code></pre>
+<p>Although is a little bit longer, it enables a clear <strong>separation or responsabilities</strong>
+between &quot;running express&quot; and &quot;implementing the SUM requirement&quot;.</p>
+<blockquote>
+<p>The most important thing is that you can easily extract <code>expressService</code> into
+a standalone NPM module, and reuse it as plain dependency in multiple projects.</p>
+</blockquote>
+<p>As a matter of fact, <em>ForrestJS</em> did exactly that:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { runHookApp } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/hooks&apos;</span>)
+<span class="hljs-keyword">const</span> { EXPRESS_ROUTE, ...expressService } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/service-express&apos;</span>)
+
+<span class="hljs-keyword">const</span> featureSum = ({ app }) =&gt;
+    app.get(<span class="hljs-string">&apos;/:p1/:p2&apos;</span>, (req, res) =&gt; {
+        <span class="hljs-keyword">const</span> { p1, p2 } = req.params
+        <span class="hljs-keyword">const</span> sum = <span class="hljs-built_in">Number</span>(p1) + <span class="hljs-built_in">Number</span>(p2)
+        res.send(<span class="hljs-string">`<span class="hljs-subst">${p1}</span> + <span class="hljs-subst">${p2}</span> = <span class="hljs-subst">${sum}</span>`</span>)
+    })
+
+runHookApp([
+    expressService,
+    [ EXPRESS_ROUTE, featureSum ],
+])
+</code></pre>
+<p>This is a perfectly viable NodeJS app that <strong>focuses on implementing the business
+requirement</strong> that we discussed previously. (Sum 2 integers, right?)</p>
+<p>The mere running of a NodeJS server is nothing we should be concerned about.<br><strong>It should just work (tm) - and it does</strong>.</p>
+<h2 id="what-about-traceability">What about Traceability?</h2>
+<p>Well, the thing is that <code>@forrestjs/hooks</code> comes with a nice built in feature that
+will produce an app boot report similar to this one:</p>
+<p><img src="../images/hooks-server-boot-trace.png" alt="hooks boot trace"></p>
+<p>There is just a small change that we have to make to our codebase in order to
+achieve this tree rapresentation, and it comes as a built-in service:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { runHookApp, traceBoot } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/hooks&apos;</span>)
+
+...
+
+runHookApp([
+    traceBoot,
+    expressService,
+    [ EXPRESS_ROUTE, featureSum ],
+])
+</code></pre>
+<h2 id="enjoy-a-truly-sharable-infrastructure">Enjoy a truly Sharable Infrastructure</h2>
+<p>Here at <em>ForrestJS</em> we believe you should never be writing the same infrastructural
+code twice.</p>
+<blockquote>
+<p>Worst of all, you should never copy/paste the same code 
+into multiple projects!</p>
+</blockquote>
+<p>That&apos;s why we are maintaining a list of common stuff that you can plug into your
+application end extend to suit your specific business need:</p>
+<ul>
+<li><a href="https://www.npmjs.com/package/@forrestjs/service-express" target="_blank">@forrestjs/service-express</a>
+sets up a basic ExpressJS server and offers some basic extension points.</li>
+<li><a href="https://www.npmjs.com/package/@forrestjs/service-express-graphql" target="_blank">@forrestjs/service-express-graphql</a></li>
+<li><a href="https://www.npmjs.com/package/@forrestjs/service-express-ssr" target="_blank">@forrestjs/service-express-ssr</a>
+provides utilities to Server-Side render a React application.</li>
+<li><a href="https://www.npmjs.com/package/@forrestjs/service-postgres" target="_blank">@forrestjs/service-postgres</a>
+lets you establish a stable connection toward multiple Postgres databases, and you
+can provide Sequelize models to describe your data.</li>
+</ul>
+<p>There are <a href="https://www.npmjs.com/search?q=%40forrestjs" target="_blank">many other packages already released in NPM</a> under the <code>@forrestjs</code> organization.</p>
+<p>We are working hard to document them, we are moving our first steps and things can
+only improve :-)</p>
 
                                 
                                 </section>
@@ -884,12 +999,12 @@ responsible for translating our ES6 app into NodeJS.</p>
 
             
                 
-                <a href="ssr-folders.html" class="navigation navigation-prev " aria-label="Previous page: Folders structure">
+                <a href="cra-redux.html" class="navigation navigation-prev " aria-label="Previous page: Create React App > Redux">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="ssr-npm-dependencies.html" class="navigation navigation-next " aria-label="Next page: NPM dependencies">
+                <a href="../articles/reducers.html" class="navigation navigation-next " aria-label="Next page: Reducers">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -900,7 +1015,7 @@ responsible for translating our ES6 app into NodeJS.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Babel setup (transpiler)","level":"5.1.2.3.2","depth":4,"next":{"title":"NPM dependencies","level":"5.1.2.3.3","depth":4,"path":"howto/ssr-npm-dependencies.md","ref":"./howto/ssr-npm-dependencies.md","articles":[]},"previous":{"title":"Folders structure","level":"5.1.2.3.1","depth":4,"path":"howto/ssr-folders.md","ref":"./howto/ssr-folders.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/ssr-babel.md","mtime":"2018-12-17T06:55:37.940Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-24T14:47:21.756Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Hooks, for composable NodeJS Apps","level":"2.3","depth":1,"next":{"title":"Reducers","level":"3.1","depth":1,"path":"articles/reducers.md","ref":"./articles/reducers.md","articles":[]},"previous":{"title":"Create React App > Redux","level":"2.2","depth":1,"path":"howto/cra-redux.md","ref":"./howto/cra-redux.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/hooks.md","mtime":"2019-05-24T14:46:22.046Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-24T14:47:21.756Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
