@@ -140,6 +140,19 @@
             
         </li>
     
+        <li class="chapter " data-level="1.4" data-path="../api/packages.html">
+            
+                <a href="../api/packages.html">
+            
+                    
+                    Packages
+            
+                </a>
+            
+
+            
+        </li>
+    
 
     
         
@@ -822,13 +835,13 @@
                                 
                                 <h1 id="hooks---a-truly-modular-nodejs-app">Hooks - A truly modular NodeJS App</h1>
 <p>Writing apps in NodeJS is fun and quite easy.</p>
-<p><code>require()</code> and <code>import</code> are the building blocks for <strong>structuring your codebase 
-in modules</strong> and let them talk with each other. <a href="https://npmjs.com" target="_blank">NPM</a> let you 
+<p><code>require()</code> and <code>import</code> are the building blocks for <strong>structuring your codebase
+in modules</strong> and let them talk with each other. <a href="https://npmjs.com" target="_blank">NPM</a> let you
 share and reuse bigger blocks of logic. Great stuff.</p>
-<p>Nevertheless, it&apos;s always beed a struggle to organize our codebase into blocks that
-represent relevant business logic. So to speak, <strong>features that a customer is
+<p>Nevertheless, it&apos;s always been a struggle to organize our codebase into blocks that
+represent relevant business logic. So to speak <strong>features that a customer is
 willing to pay for</strong>.</p>
-<p>Here is a simplicistic implementation of an app that should be able to
+<p>Here is a simplistic implementation of an app that should be able to
 <strong>sum two integers</strong>:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;express&apos;</span>)
 <span class="hljs-keyword">const</span> app = express()
@@ -846,7 +859,7 @@ app.listen(port, () =&gt; <span class="hljs-built_in">console</span>.log(<span c
 <blockquote>
 <p>sum two integers</p>
 </blockquote>
-<p>you quikly find out that the only relevant piece of code would be:</p>
+<p>you quickly find out that the only relevant piece of code would be:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> sum = <span class="hljs-built_in">Number</span>(p1) + <span class="hljs-built_in">Number</span>(p2)
 </code></pre>
 <p>Ok, this is quite a strict interpretation. Let&apos;s say that the code that is relevant
@@ -857,16 +870,25 @@ to the business requirement is more likely something like this:</p>
 <p>If you are a little bit like me, you find yourself writing - or copying -
 <em>Express</em> (or <em>Koa</em> or whatever...) setup scripts over and over, project by
 project.</p>
-<p>This structural code has the following charateristics:</p>
+<p>This structural code has the following characteristics:</p>
 <ol>
 <li>it is almost always the same</li>
 <li>it doesn&apos;t contribute to the business requirement</li>
-<li>nothign work without it</li>
+<li>nothing works</li>
 </ol>
-<h2 id="wordpress-almost-nailed-it">WordPress almost nailed it...</h2>
-<p>Engineers at WordPress found out long time ago that <strong>the value of a platform roots
-in its capablity to run external plugins</strong>. WordPress wouldn&apos;t be WordPress without
+<blockquote>
+<p>But on top of it, the sad truth is that <br><strong>your customer is not willing to pay for it</strong>.</p>
+</blockquote>
+<p>&#x2705; Infrastructural code is a necessity that doesn&apos;t bring much value, and if you could
+<strong>find a way to separate business from infrastructure, and reuse infrastructure</strong>,
+you would surely see your profits growing. Either in more money or just free time.</p>
+<h2 id="wordpress-almost-nailed-it-&#x1F914;">WordPress almost nailed it... &#x1F914;</h2>
+<p>Engineers at WordPress found out, a long time ago, that <strong>the value of a platform root in its
+capability to run external plugins</strong>.</p>
+<blockquote>
+<p>WordPress wouldn&apos;t be WordPress without
 a rich plugins echosystem.</p>
+</blockquote>
 <p>WordPress provides you with some <em>core functionalities</em> and a huge amount of
 <strong>extension points</strong>. You can write a file that basically asks WP to:</p>
 <blockquote>
@@ -874,17 +896,18 @@ a rich plugins echosystem.</p>
 </blockquote>
 <p>And this is the good side of it.</p>
 <p>You can pack your business logic in a plugin (or theme) that runs on top of all the
-&quot;stuff&quot; of which WordPress is made. Stuff that you and me don&apos;t even need to care 
+&quot;stuff&quot; of which WordPress is made. Stuff that you and I don&apos;t even need to know
 so much.</p>
 <p>The flipside is that you have plugins that hook into WordPress, plugins that hook into
 plugins that hook into WordPress... and so on.</p>
 <p><strong>It is a hard job to trace and debug plugin composability.</strong></p>
-<h2 id="welcome-forrestjshooks--">Welcome <code>@forrestjs/hooks</code> :-)</h2>
-<p><code>@forrestjs/hooks</code> is a small library that enable <strong>traceable composability</strong> in your
+<h2 id="but-forrestjss-hooks-surely-did-&#x1F60F;">... but ForrestJS&apos;s Hooks surely did! &#x1F60F;</h2>
+<p><code>@forrestjs/hooks</code> is a small library that enables <strong>traceable composability</strong> in your
 Javascript application.</p>
-<p>With the hooks you can refactor the code we saw earlies into this:</p>
+<p>With the hooks you can refactor the code we wrote earlier into this:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> { runHookApp, createHook, START_SERVICES } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/hooks&apos;</span>)
 
+<span class="hljs-comment">// Infrastructure</span>
 <span class="hljs-keyword">const</span> expressService = () =&gt; {
     <span class="hljs-keyword">const</span> express = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;express&apos;</span>)
     <span class="hljs-keyword">const</span> app = express()
@@ -897,6 +920,7 @@ Javascript application.</p>
     app.listen(port, () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Running...&apos;</span>))
 }
 
+<span class="hljs-comment">// Real Business Value</span>
 <span class="hljs-keyword">const</span> featureSum = ({ app }) =&gt;
     app.get(<span class="hljs-string">&apos;/:p1/:p2&apos;</span>, (req, res) =&gt; {
         <span class="hljs-keyword">const</span> { p1, p2 } = req.params
@@ -909,11 +933,13 @@ runHookApp([
     [ <span class="hljs-string">&apos;express&apos;</span>, featureSum ],
 ])
 </code></pre>
-<p>Although is a little bit longer, it enables a clear <strong>separation or responsabilities</strong>
-between &quot;running express&quot; and &quot;implementing the SUM requirement&quot;.</p>
+<p>Although is a little bit longer, it enables a clear <strong>separation of responsibilities</strong>
+between &quot;running Express&quot; and &quot;implementing the SUM OF TWO INTEGERS&quot;.</p>
+<p>This is called &quot;<a href="https://en.wikipedia.org/wiki/Single_responsibility_principle" target="_blank">Single Responsibility Principle</a>&quot;
+and is one of the most important things you can learn for engineering and Life &#x1F600;</p>
 <blockquote>
-<p>The most important thing is that you can easily extract <code>expressService</code> into
-a standalone NPM module, and reuse it as plain dependency in multiple projects.</p>
+<p>&#x2705; The most important thing is that <strong>you can easily extract <code>expressService</code> into
+a standalone NPM module</strong>, and reuse it as plain dependency in multiple projects.</p>
 </blockquote>
 <p>As a matter of fact, <em>ForrestJS</em> did exactly that:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> { runHookApp } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/hooks&apos;</span>)
@@ -933,16 +959,17 @@ runHookApp([
 </code></pre>
 <p>This is a perfectly viable NodeJS app that <strong>focuses on implementing the business
 requirement</strong> that we discussed previously. (Sum 2 integers, right?)</p>
-<p>The mere running of a NodeJS server is nothing we should be concerned about.<br><strong>It should just work (tm) - and it does</strong>.</p>
+<p>The mere running of a NodeJS server is nothing we should be concerned about.
+<strong>It should just work <sup>~TM</sup>, and it does</strong>.</p>
 <h2 id="what-about-traceability">What about Traceability?</h2>
-<p>Well, the thing is that <code>@forrestjs/hooks</code> comes with a nice built in feature that
+<p>Well, the thing is that <code>@forrestjs/hooks</code> comes with a nice built-in feature that
 will produce an app boot report similar to this one:</p>
 <p><img src="../images/hooks-server-boot-trace.png" alt="hooks boot trace"></p>
-<p>There is just a small change that we have to make to our codebase in order to
-achieve this tree rapresentation, and it comes as a built-in service:</p>
+<p>There is just a small change that you have to make to your codebase in order to
+achieve this tree representation, and it comes as a built-in service:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> { runHookApp, traceBoot } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/hooks&apos;</span>)
 
-...
+... your business logic ...
 
 runHookApp([
     traceBoot,
@@ -950,11 +977,11 @@ runHookApp([
     [ EXPRESS_ROUTE, featureSum ],
 ])
 </code></pre>
-<h2 id="enjoy-a-truly-sharable-infrastructure">Enjoy a truly Sharable Infrastructure</h2>
-<p>Here at <em>ForrestJS</em> we believe you should never be writing the same infrastructural
+<h2 id="enjoy-a-truly-sharable-infrastructure-&#x1F941;">Enjoy a truly Sharable Infrastructure &#x1F941;</h2>
+<p>Here at <em>ForrestJS</em>, we believe you should never write the same infrastructural
 code twice.</p>
 <blockquote>
-<p>Worst of all, you should never copy/paste the same code 
+<p>Worst of all, you should never copy/paste the same code
 into multiple projects!</p>
 </blockquote>
 <p>That&apos;s why we are maintaining a list of common stuff that you can plug into your
@@ -970,7 +997,7 @@ lets you establish a stable connection toward multiple Postgres databases, and y
 can provide Sequelize models to describe your data.</li>
 </ul>
 <p>There are <a href="https://www.npmjs.com/search?q=%40forrestjs" target="_blank">many other packages already released in NPM</a> under the <code>@forrestjs</code> organization.</p>
-<p>We are working hard to document them, we are moving our first steps and things can
+<p>&#x1F449; We are working hard to document them, we are moving our first steps and things can
 only improve :-)</p>
 
                                 
@@ -1015,7 +1042,7 @@ only improve :-)</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Hooks, for composable NodeJS Apps","level":"2.3","depth":1,"next":{"title":"Reducers","level":"3.1","depth":1,"path":"articles/reducers.md","ref":"./articles/reducers.md","articles":[]},"previous":{"title":"Create React App > Redux","level":"2.2","depth":1,"path":"howto/cra-redux.md","ref":"./howto/cra-redux.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/hooks.md","mtime":"2019-05-24T14:46:22.046Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-24T14:54:22.275Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Hooks, for composable NodeJS Apps","level":"2.3","depth":1,"next":{"title":"Reducers","level":"3.1","depth":1,"path":"articles/reducers.md","ref":"./articles/reducers.md","articles":[]},"previous":{"title":"Create React App > Redux","level":"2.2","depth":1,"path":"howto/cra-redux.md","ref":"./howto/cra-redux.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/hooks.md","mtime":"2019-05-26T10:02:26.518Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-05-26T10:03:45.791Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
