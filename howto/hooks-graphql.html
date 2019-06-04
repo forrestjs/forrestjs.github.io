@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Babel setup (transpiler) · GitBook</title>
+        <title>GraphQL made easy with Hooks · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -69,10 +69,10 @@
     <link rel="shortcut icon" href="../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="ssr-npm-dependencies.html" />
+    <link rel="next" href="../articles/reducers.html" />
     
     
-    <link rel="prev" href="ssr-folders.html" />
+    <link rel="prev" href="hooks.html" />
     
 
     </head>
@@ -212,7 +212,7 @@
             
         </li>
     
-        <li class="chapter " data-level="2.5" data-path="hooks-graphql.html">
+        <li class="chapter active" data-level="2.5" data-path="hooks-graphql.html">
             
                 <a href="hooks-graphql.html">
             
@@ -540,7 +540,7 @@
             
         </li>
     
-        <li class="chapter active" data-level="5.1.2.3.2" data-path="ssr-babel.html">
+        <li class="chapter " data-level="5.1.2.3.2" data-path="ssr-babel.html">
             
                 <a href="ssr-babel.html">
             
@@ -844,7 +844,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href=".." >Babel setup (transpiler)</a>
+        <a href=".." >GraphQL made easy with Hooks</a>
     </h1>
 </div>
 
@@ -859,43 +859,193 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="ssr---babel-setup-transpiler">SSR - Babel Setup (transpiler)</h1>
-<p>Create <code>/.babelrc</code>:</p>
-<pre><code>{
-    &quot;presets&quot;: [
-        &quot;@babel/preset-env&quot;,
-        &quot;@babel/preset-react&quot;
-    ],
-    &quot;plugins&quot;: [
-        &quot;babel-plugin-dynamic-import-node-babel-7&quot;,
-        &quot;react-loadable/babel&quot;
-    ],
-    &quot;env&quot;: {
-        &quot;node&quot;: {
-            &quot;plugins&quot;: [
-                [
-                    &quot;babel-plugin-transform-require-ignore&quot;,
-                    { &quot;extensions&quot;: [ &quot;.css&quot;, &quot;.less&quot;, &quot;.sass&quot;, &quot;.styl&quot; ] }
-                ]
-            ]
-        }
-    }
-}
-</code></pre><h3 id="why-babel">why Babel?</h3>
-<p>With SSR we render React in our Node app, that means that we need to transpile
-some part of our client codebase. For sure we need to transpile JSX, but you might
-have in place some weird thing in Webpack as well, and Babel would have to take
-care of that.</p>
+                                <h1 id="graphql-made-easy-with-hooks">GraphQL made easy with Hooks</h1>
+<p>Facebook&apos;s crew didn&apos;t only came up with <a href="https://reactjs.org/" target="_blank">React</a> and 
+<a href="https://reactjs.org/docs/typechecking-with-proptypes.html" target="_blank">PropTypes</a>... they also produced
+<a href="https://graphql.org/" target="_blank">GraphQL</a>!</p>
 <blockquote>
-<p>For instance, is not uncommon for React apps to use ES6 <code>class</code> syntax, likely
-in combination with <code>class properties</code>.</p>
+<p>GraphQL is to <em>REST Api</em> what PropTypes is to <em>React Components&apos; Props</em></p>
 </blockquote>
-<p>In a normal NodeJS project I would suggest not to implement fancy transpile layers
-as with Node 10.x came a good deal of new supported syntaxes. But as we are going to 
-merge client and server, in this tutorial I&apos;m going to fully use ES6 and Javascript 
-modules (import/export) and that means that I need to transpile some stuff. </p>
-<p>The main tool is <a href="">Babel</a> with some plugins applied to it. Babel is going to be
-responsible for translating our ES6 app into NodeJS.</p>
+<p>This is the simplest explanation to GraphQL that I came up with.<br>
+You basically <strong>describe the arguments to a particular request</strong>, and you 
+<strong>describe the output data structure</strong>.</p>
+<p>GraphQL provides 2 major benefits (plus many other):</p>
+<ul>
+<li>input / output schema validation</li>
+<li>fetch from multiple end points within a single request</li>
+</ul>
+<p>Honestly, I hardly imagine working out an API without it. It&apos;s like the good ol&apos;
+<a href="https://json-schema.org/" target="_blank">Json Schema</a> but on steroid.</p>
+<hr>
+<p>Enough with the intro, in this tutorial you <strong>learn how to setup a GraphQL API service</strong>
+in NodeJS, using <a href="https://expressjs.com/" target="_blank">ExpressJS</a> an <a href="hooks.html">ForrestJS&apos; Hooks</a>.</p>
+<blockquote>
+<p>If you just want to see this in action, <a href="../downloads/hooks-graphql.zip">download this tutorial codebase here</a>,<br>
+then run <code>yarn boot</code>.</p>
+</blockquote>
+<h2 id="step-n1---create-a-hooks-app">Step n.1 - Create a Hooks App</h2>
+<p>Initialize a new <em>NodeJS</em> project (<code>yarn init</code>) then install the hooks:</p>
+<pre><code class="lang-bash">yarn add @forrestjs/hooks
+</code></pre>
+<p>Then copy this <a href="hooks.html"><em>Hooks</em></a> skeleton app into <code>index.js</code>:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { runHookApp } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/hooks&apos;</span>)
+runHookApp([ <span class="hljs-comment">/* features go here */</span> ])
+</code></pre>
+<p>At last you can run this app with <code>npx</code>:</p>
+<pre><code class="lang-bash">NODE_ENV=development npx nodemon index.js
+</code></pre>
+<p>You might notice that... nothing happens!<br>
+That&apos;s right, this is just an empty Hooks based app.</p>
+<p><strong>NOTE:</strong> It is quite important to set <code>NODE_ENV=development</code> to have some cool stuff
+available later in the tutorial. Stick with it for now.</p>
+<h2 id="step-n2---add-expressjs-service">Step n.2 - Add ExpressJS Service</h2>
+<p>Running an ExpressJS on ForrestJS is a really easy task.</p>
+<blockquote>
+<p>If you want a better explanation of what we are about to do,<br>
+you may want to <a href="hooks.html">checkout the <em>Hooks</em> tutorial</a> first.</p>
+</blockquote>
+<p>First install the service package:</p>
+<pre><code class="lang-bash">yarn add @forrestjs/service-express
+</code></pre>
+<p>Then modify <code>index.js</code> to register the new service:</p>
+<pre><code class="lang-js">runHookApp([
+    <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/service-express&apos;</span>),
+])
+</code></pre>
+<p>Run the app again and we notice that some kind onf service is up and running on <code>8080</code>:</p>
+<p><img src="../images/hooks-graphql-express-console.png" alt="hooks-graphql-express-console"></p>
+<p>But if you try to navigate to <code>http://localhost:8080</code> you&apos;ll face bad luck:</p>
+<p><img src="../images/hooks-graphql-express-entrypoint.png" alt="hooks-graphql-express-entrypoint"></p>
+<p>That is because <code>@forrestjs/service-express</code> creates an ExpressJS app for you all right, 
+but it doesn&apos;t provide any route route to it.</p>
+<h3 id="2b---add-your-first-route">2b - Add your first route</h3>
+<p>It is up to you to create a custom feature and implement some your business logic,
+here follows a super short tutorial <strong>how to create your first route</strong>.</p>
+<p>First let&apos;s create a new <em>NodeJS</em> module where to place this piece of logic:</p>
+<pre><code class="lang-bash">vi home.route.js
+</code></pre>
+<p>And paste this code into it:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { EXPRESS_ROUTE } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/service-express&apos;</span>)
+
+<span class="hljs-keyword">const</span> routeHome = ({ app }) =&gt;
+    app.get(<span class="hljs-string">&apos;/&apos;</span>, (_, res) =&gt; res.send(<span class="hljs-string">&apos;Welcome!&apos;</span>))
+
+<span class="hljs-built_in">module</span>.exports = [ EXPRESS_ROUTE, routeHome ]
+</code></pre>
+<p>Believe it or not, this is a perfectly functionable <em>ForrestJS</em>&apos;s feature!</p>
+<p>The next step is just to register it into your <em>Hooks App</em>:</p>
+<pre><code class="lang-js">runHookApp([
+    <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/service-express&apos;</span>),
+    <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;./home.route&apos;</span>),
+])
+</code></pre>
+<p>Reload your <code>http://localhost:8080</code> and the magic is just blowing out your mind!</p>
+<p><img src="../images/hooks-graphql-express-welcome.png" alt="hooks-graphql-express-welcome"></p>
+<p>Of course now you can add all the routes you may need, but let&apos;s stick to the plan and
+move into <em>GraphQL</em> service.</p>
+<h2 id="step-n3---add-graphql">Step n.3 - Add GraphQL</h2>
+<p>I guess you got the drill by now... Let&apos; first install the <em>ForrestJS</em>&apos;s package:</p>
+<pre><code class="lang-bash">yarn add @forrestjs/service-express-graphql
+</code></pre>
+<p>Then register it into pur App:</p>
+<pre><code class="lang-js">...
+
+runHookApp([
+    ...
+    require(<span class="hljs-string">&apos;@forrestjs/service-express-graphql&apos;</span>),
+])
+</code></pre>
+<p>This is still a very small codebase, but if you try to hit:</p>
+<pre><code>http://localhost:8080/api
+</code></pre><p>Things start to look quite juicy now:</p>
+<p><img src="../images/hooks-graphql-info.png" alt="hooks-graphql-info"></p>
+<p><code>@forrestjs/service-express-graphq</code> does a couple of things just out of the box:</p>
+<ol>
+<li>it mounts <a href="https://github.com/graphql/express-graphql" target="_blank"><code>express-graphql</code></a> on the <code>/api</code> route in your <em>ExpressJS</em> service</li>
+<li>activates <em>GraphiQL</em> UI in develpment (that&apos;s why <code>NODE_ENV=development</code>)</li>
+<li>it provides an <code>info</code> query and mutation (but you can override it of course)</li>
+</ol>
+<blockquote>
+<p>As with everything in <em>ForrestJS</em>, most of the default behaviours are fully configurable
+via the App&apos;s configuration or <em>Environment Variables</em>.</p>
+</blockquote>
+<h2 id="step-n4---add-your-own-queries-and-mutations">Step n.4 - Add your own Queries and Mutations</h2>
+<p>There are plenty of <em>GraphQL</em> tutorials out there, so here we will focus in writing
+a simple query that shows how to use the <code>EXPRESS_GRAPHQL</code> hook.</p>
+<p>First create a new <em>Hooks Feature</em> where to implement the query,
+just because it is nice to keep an eye on the
+<a href="https://en.wikipedia.org/wiki/Single_responsibility_principle" target="_blank"><em>Single Responsibility Principle</em></a> &#x1F60F;</p>
+<pre><code class="lang-bash">vi welcome.query.js
+</code></pre>
+<p>And paste this code in it:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { EXPRESS_GRAPHQL } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/service-express-graphql&apos;</span>)
+<span class="hljs-keyword">const</span> { GraphQLList, GraphQLString } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;graphql&apos;</span>)
+
+<span class="hljs-keyword">const</span> welcomeHandler = (_, args, { req }) =&gt; [
+    <span class="hljs-string">`Welcome, <span class="hljs-subst">${args.name}</span>!`</span>,
+    req.protocol + <span class="hljs-string">&apos;://&apos;</span> + req.get(<span class="hljs-string">&apos;host&apos;</span>) + req.originalUrl,
+]
+
+<span class="hljs-keyword">const</span> welcomeQuery = ({ queries }) =&gt; 
+    queries.welcome = {
+        description: <span class="hljs-string">&apos;Welcome the user&apos;</span>,
+        args: {
+            name: {
+                type: GraphQLString,
+                defaultValue: <span class="hljs-string">&apos;user&apos;</span>,
+            },
+        },
+        type: <span class="hljs-keyword">new</span> GraphQLList(GraphQLString),
+        resolve: welcomeHandler,
+    }
+
+<span class="hljs-built_in">module</span>.exports = [ EXPRESS_GRAPHQL, welcomeQuery ]
+</code></pre>
+<p>Now it&apos;s just a matter of registering the new feature in your app:</p>
+<pre><code class="lang-js">...
+
+runHookApp([
+    ...
+    require(<span class="hljs-string">&apos;./welcome.query&apos;</span>),
+])
+</code></pre>
+<p>Reload your <em>GraphiQL</em> and enjoy your new <code>welcome</code> endpoint:</p>
+<p><img src="../images/hooks-graphql-welcome.png" alt="hooks-graphql-welcome"></p>
+<p><strong>NOTE n.1:</strong> The <a href="https://github.com/forrestjs/forrestjs/tree/master/packages/service-express-graphql" target="_blank"><code>service-express-graphql</code></a>
+decorates the query&apos;s <em>context</em> with the <code>req</code> and <code>res</code> objects from the
+<em>ExpressJS</em>&apos; middleware. This comes in handy if you plan to have some middlewars that
+<strong>add informations into the request&apos;s context</strong> and you plan to access them at resolve time.</p>
+<p><strong>NOTE n.2:</strong> Most of the time I even split the query&apos;s definition from the query&apos;s
+implementation (the <code>resolve</code> function) into two separated modules. I do that mostly
+because of testability, but it time it turns our a very good practice.</p>
+<h2 id="configuration---how-to-change-the-endpoint-name">Configuration - How to change the Endpoint name</h2>
+<p>Say you don&apos;t like <code>/api</code> as endpoint for your GraphQL... say you&apos;d prefer <code>/graphql</code>.</p>
+<p>Here is how you can hook into the App&apos;s boot process and provide custom configuration:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> { runHookApp } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/hooks&apos;</span>)
+<span class="hljs-keyword">const</span> { registerAction, SETTINGS } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/hooks&apos;</span>)
+
+registerAction([SETTINGS, ({ settings }) =&gt; {
+    settings.express = {
+        graphql: {
+            mountPoint: <span class="hljs-string">&apos;/graphql&apos;</span>,
+        },
+    }
+}])
+
+runHookApp([
+    <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/service-express&apos;</span>),
+    <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;./home.route&apos;</span>),
+    <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/service-express-graphql&apos;</span>),
+    <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;./welcome.query&apos;</span>),
+])
+</code></pre>
+<h2 id="download">Download</h2>
+<p>If you experienced any trouble following the steps above, 
+<a href="../downloads/hooks-graphql.zip">download this tutorial codebase here</a>.</p>
+<h2 id="challenge">Challenge</h2>
+<p>You now have all the basics components to play around with your ExpressJS app and GraphQL.</p>
+<p>Can you build a <strong>simple authentication system</strong> so that a mutation will give you access
+to some protected queries?</p>
 
                                 
                                 </section>
@@ -923,12 +1073,12 @@ responsible for translating our ES6 app into NodeJS.</p>
 
             
                 
-                <a href="ssr-folders.html" class="navigation navigation-prev " aria-label="Previous page: Folders structure">
+                <a href="hooks.html" class="navigation navigation-prev " aria-label="Previous page: Hooks, truly modular NodeJS Apps">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="ssr-npm-dependencies.html" class="navigation navigation-next " aria-label="Next page: NPM dependencies">
+                <a href="../articles/reducers.html" class="navigation navigation-next " aria-label="Next page: Reducers">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -939,7 +1089,7 @@ responsible for translating our ES6 app into NodeJS.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Babel setup (transpiler)","level":"5.1.2.3.2","depth":4,"next":{"title":"NPM dependencies","level":"5.1.2.3.3","depth":4,"path":"howto/ssr-npm-dependencies.md","ref":"./howto/ssr-npm-dependencies.md","articles":[]},"previous":{"title":"Folders structure","level":"5.1.2.3.1","depth":4,"path":"howto/ssr-folders.md","ref":"./howto/ssr-folders.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/ssr-babel.md","mtime":"2018-12-17T06:55:37.940Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-06-04T07:57:30.591Z"},"basePath":"..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"GraphQL made easy with Hooks","level":"2.5","depth":1,"next":{"title":"Reducers","level":"3.1","depth":1,"path":"articles/reducers.md","ref":"./articles/reducers.md","articles":[]},"previous":{"title":"Hooks, truly modular NodeJS Apps","level":"2.4","depth":1,"path":"howto/hooks.md","ref":"./howto/hooks.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/hooks-graphql.md","mtime":"2019-06-04T07:50:55.958Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-06-04T07:57:30.591Z"},"basePath":"..","book":{"language":""}});
         });
     </script>
 </div>
