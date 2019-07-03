@@ -883,69 +883,77 @@ Nowadays I do my best to abstract generic needs into sharable and reusable packa
 that you find listed here.</p>
 <p>Most of them consist in very little amount of code, but they provide <em>hooks</em> so that
 your application can <strong>easily extend and customize their behaviour</strong>.</p>
+<h2 id="core">Core</h2>
+<h4 id="hooks">hooks</h4>
+<p>This is the core of ForrestJS modularity. It allows you to implement an extensible applications
+made of composable feature pretty much like Wordpress plugins, but in a Node fashion and with
+traceable and debuggable support.</p>
+<p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/hooks" target="_blank">Install from NPM</a><br>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/hooks/README.md#readme" target="_blank">Documentation</a></p>
 <h2 id="services">Services</h2>
 <h4 id="service-env">service-env</h4>
 <p>Reads environment configuration from different <em>dot-files</em> into your <code>process.env</code>.</p>
-<p>[[ to be completed ]]</p>
 <p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/service-env" target="_blank">Install from NPM</a><br>
-&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-env/README.md" target="_blank">Documentation</a></p>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-env/README.md#readme" target="_blank">Documentation</a></p>
 <h4 id="service-logger">service-logger</h4>
-<p>Offers a simple interface to logging.</p>
-<p>[[ to be completed ]]</p>
+<p>Offers a simple interface to logging using <a href="https://www.npmjs.com/package/winston" target="_blank">Winston</a> under the hood.</p>
 <p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/service-logger" target="_blank">Install from NPM</a><br>
-&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-logger/README.md" target="_blank">Documentation</a></p>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-logger/README.md#readme" target="_blank">Documentation</a></p>
 <h4 id="service-jwt">service-jwt</h4>
 <p>Helps to issue and validate <em>JWT</em> tokens. It is mainly a <em>Promise</em> wrapper around the
 package <code>jsonwebtoken</code>.</p>
-<p>[[ to be completed ]]</p>
 <p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/service-jwt" target="_blank">Install from NPM</a><br>
-&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-jwt/README.md" target="_blank">Documentation</a></p>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-jwt/README.md#readme" target="_blank">Documentation</a></p>
 <h4 id="service-hash">service-hash</h4>
 <p>It provides some basic cryptographic helper methods to safely hash passwords.</p>
 <p>[[ to be completed ]]</p>
 <p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/service-hash" target="_blank">Install from NPM</a><br>
-&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-hash/README.md" target="_blank">Documentation</a></p>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-hash/README.md#readme" target="_blank">Documentation</a></p>
 <h4 id="service-express">service-express</h4>
 <p>It helps setting up and running an <em>ExpressJS</em> App. You will be able to provide custom
 routes and middlewares by hooking into it.</p>
 <p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/service-express" target="_blank">Install from NPM</a><br>
-&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-express/README.md" target="_blank">Documentation</a></p>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-express/README.md#readme" target="_blank">Documentation</a></p>
+<h4 id="service-express-cookies">service-express-cookies</h4>
+<p>It helps handling cookies in both server and client, decorating your Express app with some
+helper methods like <code>req.getCookie(&apos;foo&apos;)</code> and <code>res.setCookie(&apos;foo&apos;, &apos;content&apos;)</code>.</p>
+<p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/service-express-cookies" target="_blank">Install from NPM</a><br>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-express-cookies/README.md#readme" target="_blank">Documentation</a></p>
 <h4 id="service-express-graphql">service-express-graphql</h4>
 <p>It provides a <em>GraphQL</em> endpoint in your <em>ExpressJS</em> app, and simple ways to inject
 custom queries and mutations.</p>
 <p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/service-express-graphql" target="_blank">Install from NPM</a><br>
-&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-express-graphql/README.md" target="_blank">Documentation</a></p>
-<h4 id="service-express-cookies">service-express-cookies</h4>
-<p>It helps handling cookies in the server.</p>
-<p>[[ to be completed ]]</p>
-<p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/service-express-cookies" target="_blank">Install from NPM</a><br>
-&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-express-cookies/README.md" target="_blank">Documentation</a></p>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-express-graphql/README.md#readme" target="_blank">Documentation</a></p>
+<h4 id="service-express-graphql-test">service-express-graphql-test</h4>
+<p>It provides a <em>GraphQL</em> testing endpoint that allows a simple protection strategy.</p>
+<p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/service-express-graphql-test" target="_blank">Install from NPM</a><br>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-express-graphql-test/README.md#readme" target="_blank">Documentation</a></p>
 <h4 id="service-postgres">service-postgres</h4>
 <p>It helps establishing a reliable connection with one or more <em>Postgres</em> databases using the
 library <code>sequelize</code>. It also provide hooks for features to provide their own data models in
 isolation.</p>
 <p>[[ to be completed ]]</p>
 <p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/service-postgres" target="_blank">Install from NPM</a><br>
-&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-postgres/README.md" target="_blank">Documentation</a></p>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-postgres/README.md#readme" target="_blank">Documentation</a></p>
 <h2 id="features">Features</h2>
 <h4 id="feature-storage">feature-storage</h4>
 <p>Provides universal redux dispatch-able actions to handle <code>localStorage</code> and <code>cookies</code>.</p>
 <p>[[ to be completed ]]</p>
 <p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/feature-storage" target="_blank">Install from NPM</a><br>
-&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/feature-storage/README.md" target="_blank">Documentation</a></p>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/feature-storage/README.md#readme" target="_blank">Documentation</a></p>
 <h4 id="feature-network">feature-network</h4>
 <p>It provides universal redux dispatch-able action to issue <em>REST</em> requests and <em>GraphQL</em> queries.</p>
 <p>It also provides reducers and containers to monitor the network status and detect 
 online/offline changes.</p>
 <p>[[ to be completed ]]</p>
 <p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/feature-network" target="_blank">Install from NPM</a><br>
-&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/feature-network/README.md" target="_blank">Documentation</a></p>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/feature-network/README.md#readme" target="_blank">Documentation</a></p>
 <h4 id="feature-locale">feature-locale</h4>
 <p>This is a full-stack feature that helps dealing with multilanguage and translatable apps.
 It integrates with your <em>GraphQL</em> endpoint and storage/network features.</p>
 <p>[[ to be completed ]]</p>
 <p>&#x1F449; <a href="https://www.npmjs.com/package/@forrestjs/feature-locale" target="_blank">Install from NPM</a><br>
-&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/feature-locale/README.md" target="_blank">Documentation</a></p>
+&#x1F449; <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/feature-locale/README.md#readme" target="_blank">Documentation</a></p>
 
                                 
                                 </section>
@@ -985,7 +993,7 @@ It integrates with your <em>GraphQL</em> endpoint and storage/network features.<
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Navigate the Packages","level":"2.2","depth":1,"next":{"title":"Create React App > Universal","level":"3.1","depth":1,"url":"https://marcopeg.com/2019/create-react-app-universal-pwa","ref":"https://marcopeg.com/2019/create-react-app-universal-pwa","articles":[]},"previous":{"title":"Read the Tutorials","level":"2.1","depth":1,"path":"tutorials.md","ref":"./tutorials.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"packages.md","mtime":"2019-06-08T08:00:18.911Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-06-08T08:11:21.246Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Navigate the Packages","level":"2.2","depth":1,"next":{"title":"Create React App > Universal","level":"3.1","depth":1,"url":"https://marcopeg.com/2019/create-react-app-universal-pwa","ref":"https://marcopeg.com/2019/create-react-app-universal-pwa","articles":[]},"previous":{"title":"Read the Tutorials","level":"2.1","depth":1,"path":"tutorials.md","ref":"./tutorials.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"packages.md","mtime":"2019-07-02T17:43:12.327Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2019-07-03T13:21:30.123Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
