@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>Create a Simple Home Page · GitBook</title>
+        <title>Connect to Postgres as a Service · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -69,10 +69,10 @@
     <link rel="shortcut icon" href="../../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../030-the-users-feature/" />
+    <link rel="next" href="../060-integrate-services-and-features/" />
     
     
-    <link rel="prev" href="../010-fastify-app-scaffold/" />
+    <link rel="prev" href="../040-add-new-user/" />
     
 
     </head>
@@ -265,9 +265,9 @@
             
         </li>
     
-        <li class="chapter active" data-level="3.3.2" data-path="./">
+        <li class="chapter " data-level="3.3.2" data-path="../020-fastify-home-page/">
             
-                <a href="./">
+                <a href="../020-fastify-home-page/">
             
                     
                     Create a Simple Home Page
@@ -304,9 +304,9 @@
             
         </li>
     
-        <li class="chapter " data-level="3.3.5" data-path="../050-postgres-service/">
+        <li class="chapter active" data-level="3.3.5" data-path="./">
             
-                <a href="../050-postgres-service/">
+                <a href="./">
             
                     
                     Connect to Postgres as a Service
@@ -1174,7 +1174,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../../.." >Create a Simple Home Page</a>
+        <a href="../../.." >Connect to Postgres as a Service</a>
     </h1>
 </div>
 
@@ -1189,86 +1189,145 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 class="tutorial-step" id="my-first-rest-api-&#xBB;-create-a-simple-home-page"><span>My First REST API &#xBB;</span> Create a Simple Home Page</h1>
+                                <h1 class="tutorial-step" id="my-first-rest-api-&#xBB;-connect-to-postgres-as-a-service"><span>My First REST API &#xBB;</span> Connect to Postgres as a Service</h1>
 
-<p><a href="../">My First Feature</a> &#xBB; <a href="./">Create a Simple Home Page</a></p>
+<p><a href="../">My First Feature</a> &#xBB; <a href="./">Connect to Postgres as a Service</a></p>
 <hr>
-<h1 id="create-a-simple-home-page">Create a Simple Home Page</h1>
-<p>Create a new <code>home-page.js</code> file and use the following code to scaffold a simple feature that hooks into <em>Fastify&apos;s Service API</em> to implement a Home Page route:</p>
-<pre><code class="lang-js"><span class="hljs-keyword">const</span> HOME_PAGE_CONTENT = <span class="hljs-string">`
-  &lt;h2&gt;Home Page&lt;/h2&gt;
-  &lt;p&gt;Welcome to yet a new amazing website!&lt;/p&gt;
-`</span>;
-
-<span class="hljs-keyword">const</span> fastifyRouteHandler = (request, reply) =&gt; {
-  reply.type(<span class="hljs-string">&quot;text/html&quot;</span>).send(HOME_PAGE_CONTENT);
-};
-
-<span class="hljs-keyword">const</span> homePageFeature = ({ registerAction }) =&gt; {
-  registerAction({
-    hook: <span class="hljs-string">&quot;$FASTIFY_GET&quot;</span>,
-    handler: {
-      url: <span class="hljs-string">&quot;/&quot;</span>,
-      handler: fastifyRouteHandler
-    }
-  });
-};
-
-<span class="hljs-built_in">module</span>.exports = homePageFeature;
+<h1 id="connect-to-postgres-as-a-service">Connect to Postgres as a Service</h1>
+<p>Let&apos;s step up the game a little bit and try to use a real database. In this tutorial we will create a service that connects to a PostgreSQL database, and offers an interface towards the App&apos;s features to run custom queries.</p>
+<blockquote>
+<p>Why a service?</p>
+</blockquote>
+<p>I&apos;m glad you asked &#x1F60E;!</p>
+<p>Setting up a connection to a db is not really a &quot;business logic&quot;. It&apos;s more of a infrastructural responsibility that may be easily shared across different Apps.
+A service is the best match for this kind of stuff.</p>
+<h2 id="get-a-database">Get a Database</h2>
+<p>You can get a free PostgreSQL database on <a href="https://www.elephantsql.com/" target="_blank">ElephantSQL</a>. Once you set it up, you need to get the full connection string that looks a lot like:</p>
+<pre><code class="lang-bash">postgres://ghstdny:jGTHd9Xf9KsGlfgg9fifSCjkdl4fw1G-g@tai.db.elephantsql.com/ghstdny
 </code></pre>
-<p>Once you&apos;ve created the feature, simply add it to your App&apos;s manifest:</p>
-<pre><code class="lang-js">runHookApp({
-  ...
-  features: [
-    <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;./home-page&apos;</span>)
-  ]
+<p>Then you should add it in the Sandbox&apos;s <strong>Environmental Variables</strong> as <code>PGSTRING</code>.</p>
+<h2 id="barebone-codebase">Barebone Codebase</h2>
+<p>If we had to &quot;just get it done&quot;, without ForrestJS, and without thinking in terms of modular composition, we could just open up <a href="https://node-postgres.com/" target="_blank">pg&apos;s documentation</a> and write the following code:</p>
+<pre><code class="lang-js"><span class="hljs-comment">// Create a connection pool:</span>
+<span class="hljs-keyword">const</span> { Pool } = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;pg&apos;</span>);
+<span class="hljs-keyword">const</span> pool = <span class="hljs-keyword">new</span> Pool({ connectionString: process.env.PGSTRING });
+
+<span class="hljs-comment">// Run a query:</span>
+<span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> pool.query(<span class="hljs-string">`SELECT NOW() AS &quot;current_time&quot;`</span>);
+<span class="hljs-built_in">console</span>.log(result.rows[<span class="hljs-number">0</span>])
+</code></pre>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/050-postgres-connect-osqg3?file=/src/index.js:231-483" target="_blank">https://codesandbox.io/s/050-postgres-connect-osqg3?file=/src/index.js:231-483</a></p>
+<hr>
+<p>But that is not our goal, isn&apos;t it? We&apos;re here to <strong>package this simple logic into a reusable service</strong> that makes it easy for one or more Features to deal with a PostgreSQL database. </p>
+<blockquote>
+<p>Features should not bother with the infrastructural challenges, they <strong>focus on business logic</strong>!</p>
+</blockquote>
+<p>The service that we are going to build implements 2 main responsibilities:</p>
+<ol>
+<li>Setup a connection towards the database, offering a degree of service customization and validating a successful connection</li>
+<li>Offer to new features (and existing services) a simple API to run queries.</li>
+</ol>
+<h2 id="scaffold-your-service">Scaffold your Service</h2>
+<p>A Service has the very same internal structure of a Feature. Basically, it just uses a different set of Lifecycle hooks, and gets registered before any feature.</p>
+<p>Create the <code>/pg/index.js</code> Service manifest:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> pg = ({ registerAction }) =&gt; {};
+
+<span class="hljs-built_in">module</span>.exports = pg;
+</code></pre>
+<blockquote>
+<p>And don&apos;t forget to register it in your App&apos;s manifest into the <code>services</code> list!</p>
+</blockquote>
+<h2 id="settings-propagation">Settings Propagation</h2>
+<p>Services often need some form of configuration. </p>
+<p>In our case, the <code>pg</code> service will need to know the <em>PostgreSQL Connection String</em> and the maximum amount of concurent clients that we want to keep alive and connected to our db. Stuff like that are usually done by reading an environmental variable. But accessing environmental variables froum inside our services or features may lead to some nasty bugs when you misspell stuff.</p>
+<blockquote>
+<p>I strongly recommend you <strong>checkout all your environmental variables</strong> in your App&apos;s manifest, and propagate them using the App&apos;s <code>settings</code> and the <code>getConfig()</code> API. Also, you should consider validating your environment using stuff like <a href="https://www.npmjs.com/package/envalid" target="_blank">envalid</a>:</p>
+</blockquote>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> envalid = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;envalid&quot;</span>);
+
+<span class="hljs-keyword">const</span> env = envalid.cleanEnv(process.env, {
+  PGSTRING: envalid.url(),
+  PG_MAX: envalid.num({ <span class="hljs-keyword">default</span>: <span class="hljs-number">1</span> })
+});
+
+runHookApp({
+  settings: {
+    pg: {
+      connectionString: env.PGSTRING,
+      maxConnections: env.PGMAX
+    }
+  },
 })
 </code></pre>
-<p>Try now to reload your App&apos;s home page at <a href="http://localhost:8080" target="_blank">http://localhost:8080</a>.<br>Your shiny static HTML content should definitely show up!</p>
 <hr>
-<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/create-a-simple-home-page-l6pec?file=/src/index.js" target="_blank">https://codesandbox.io/s/create-a-simple-home-page-l6pec?file=/src/index.js</a></p>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/050-postgres-service-pw36m?file=/src/index.js:678-759" target="_blank">https://codesandbox.io/s/050-postgres-service-pw36m?file=/src/index.js:678-759</a></p>
 <hr>
-<h2 id="features-folder-structure">Feature&apos;s Folder Structure</h2>
-<p>Until now, we used a single Javascript module to host our entire feature. </p>
-<p>This approach may work for some simple features, but <strong>it will definitely go out of control</strong> in case you are working on a more sophisticated piece of logic.
-After all, you want to keep your modules as small as possible to facilitate reading throught them, right?</p>
-<p>Let&apos;s then separate our Home Page logic into smaller pieces, that implement different responsibilities.</p>
-<h3 id="the-route-handler">The Route Handler</h3>
-<p>The route handler is the piece of logic that is supposed to handle the user&apos;s requests and provide some kind of output. </p>
-<blockquote>
-<p>This responsibility has nothing to share with ForrestJS or the App&apos;s composition.<br>It is a truly isolated piece of logic, who&apos;s shape depends only on Fastify&apos;s APIs</p>
-</blockquote>
-<p>With that said, we can create <code>/home-page/routes/home-page.js</code> and implement this small part:</p>
-<pre><code class="lang-js"><span class="hljs-keyword">const</span> HOME_PAGE_CONTENT = <span class="hljs-string">`
-  &lt;h2&gt;Home Page&lt;/h2&gt;
-  &lt;p&gt;Welcome to yet a new amazing website!&lt;/p&gt;
-`</span>;
+<p>With the correct environment, and the settings correctly set up, we can finally use the <code>getConfig()</code> API to setup our connection pool.</p>
+<h2 id="service-initialization">Service Initialization</h2>
+<p>First thing, we hook into the <code>$INIT_SERVICE</code> where we create the pool and share it with the rest of the app via <em>Context API</em>:</p>
+<pre><code class="lang-js">registerAction({
+  hook: <span class="hljs-string">&quot;$INIT_SERVICE&quot;</span>,
+  handler: ({ getConfig, setContext }) =&gt; {
+    <span class="hljs-comment">// 1. Get the configuration</span>
+    <span class="hljs-keyword">const</span> connectionString = getConfig(<span class="hljs-string">&quot;pg.connectionString&quot;</span>);
+    <span class="hljs-keyword">const</span> max = getConfig(<span class="hljs-string">&quot;pg.maxConnections&quot;</span>);
 
-<span class="hljs-built_in">module</span>.exports = (request, reply) =&gt; {
-  reply.type(<span class="hljs-string">&quot;text/html&quot;</span>).send(HOME_PAGE_CONTENT);
-};
+    <span class="hljs-comment">// 2. Create the pool</span>
+    <span class="hljs-keyword">const</span> pool = <span class="hljs-keyword">new</span> Pool({
+      connectionString,
+      max
+    });
+
+    <span class="hljs-comment">// 3. Share it</span>
+    setContext(<span class="hljs-string">&quot;pg.pool&quot;</span>, pool);
+  }
+});
 </code></pre>
-<h3 id="the-features-manifest">The Feature&apos;s Manifest</h3>
-<p>With the logic well isolated, all we have left to do is to &quot;explain&quot; to ForrestJS how to put the pieces together.
-How to link this route implementation with the Fastify service.</p>
-<p>We do so in the Feature&apos;s manifest file: <code>/home-page/index.js</code>:</p>
-<pre><code class="lang-js"><span class="hljs-keyword">const</span> homePageRoute = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./routes/home-page&quot;</span>);
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/050-postgres-service-pw36m?file=/src/pg/index.js:168-523" target="_blank">https://codesandbox.io/s/050-postgres-service-pw36m?file=/src/pg/index.js:168-523</a></p>
+<hr>
+<h2 id="service-start">Service Start</h2>
+<p>When it comes to PG, creating the pool does NOT check out that your connection flows correctly. It just creates the objects and internal wiring for you, but the first query will actually guarantee the correct behavior.</p>
+<p>But we don&apos;t want other Features to find out the hard way about an incorrect setup. We want to make sure they receive a fully working pool to use in their business logic.</p>
+<p>We can simply achieve this goal by hooking into <code>$SERVICE_START</code> and checking out the PostgreSQL local time:</p>
+<pre><code class="lang-js">registerAction({
+  hook: <span class="hljs-string">&quot;$START_SERVICE&quot;</span>,
+  handler: <span class="hljs-keyword">async</span> ({ getContext }) =&gt; {
+    <span class="hljs-keyword">const</span> pool = getContext(<span class="hljs-string">&quot;pg.pool&quot;</span>);
 
-<span class="hljs-keyword">const</span> homePageFeature = ({ registerAction }) =&gt; {
-  registerAction({
-    hook: <span class="hljs-string">&quot;$FASTIFY_GET&quot;</span>,
-    handler: {
-      url: <span class="hljs-string">&quot;/&quot;</span>,
-      handler: homePageRoute
+    <span class="hljs-keyword">try</span> {
+      <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> pool.query(<span class="hljs-string">`SELECT now() AS &quot;pgtime&quot;`</span>);
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Successfully connected to Postgres`</span>);
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`pgtime: <span class="hljs-subst">${res.rows[0].pgtime}</span>`</span>);
+    } <span class="hljs-keyword">catch</span> (err) {
+      <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`Could not connect to PostgreSQL`</span>);
     }
-  });
-};
-
-<span class="hljs-built_in">module</span>.exports = homePageFeature;
+  }
+});
 </code></pre>
-<p>The Feature&apos;s manifest file &quot;explains&quot; to the rest of the ForrestJS App <strong>how to connect the dots</strong>, so to speak.</p>
 <hr>
-<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/025-fastify-home-page-reorganized-7dwuh?file=/src/home-page/index.js" target="_blank">https://codesandbox.io/s/025-fastify-home-page-reorganized-7dwuh?file=/src/home-page/index.js</a></p>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/050-postgres-service-pw36m?file=/src/pg/index.js:780-1230" target="_blank">https://codesandbox.io/s/050-postgres-service-pw36m?file=/src/pg/index.js:780-1230</a></p>
+<hr>
+<blockquote>
+<p>Here we use <code>console.log</code> for simplicity, but I suggest you also check out the <a href="https://github.com/forrestjs/forrestjs/tree/master/packages/service-logger" target="_blank">Service Logger</a> that provides a better way to stream your logs to the console or to whatever logging gateway you may choose.</p>
+</blockquote>
+<h2 id="features-integration">Features Integration</h2>
+<p>One of the most important behaviors of a Service is <strong>how does it facilitates Features</strong>.<br>Basically:   </p>
+<blockquote>
+<p>what API does your Service provide?</p>
+</blockquote>
+<p>Witht the code we wrote so far, any feature could run a query <strong>after service initialization</strong> using the Context API:</p>
+<pre><code class="lang-js">registerAction({
+  hook: <span class="hljs-string">&quot;$START_FEATURE&quot;</span>,
+  handler: <span class="hljs-keyword">async</span> ({ getContext }) =&gt; {
+    <span class="hljs-keyword">const</span> pool = getContext(<span class="hljs-string">&quot;pg.pool&quot;</span>);
+    <span class="hljs-keyword">await</span> pool.query(<span class="hljs-string">&apos;SELECT ...&apos;</span>);
+  }
+});
+</code></pre>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/050-postgres-service-pw36m?file=/src/pg/index.js" target="_blank">https://codesandbox.io/s/050-postgres-service-pw36m?file=/src/pg/index.js</a></p>
 <hr>
 
                                 
@@ -1297,12 +1356,12 @@ How to link this route implementation with the Fastify service.</p>
 
             
                 
-                <a href="../010-fastify-app-scaffold/" class="navigation navigation-prev " aria-label="Previous page: Fastify App Scaffold">
+                <a href="../040-add-new-user/" class="navigation navigation-prev " aria-label="Previous page: Add a New User">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="../030-the-users-feature/" class="navigation navigation-next " aria-label="Next page: The Users Feature">
+                <a href="../060-integrate-services-and-features/" class="navigation navigation-next " aria-label="Next page: Integrate Services and Features">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -1313,7 +1372,7 @@ How to link this route implementation with the Fastify service.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Create a Simple Home Page","level":"3.3.2","depth":2,"next":{"title":"The Users Feature","level":"3.3.3","depth":2,"path":"howto/my-first-rest-api/030-the-users-feature/README.md","ref":"./howto/my-first-rest-api/030-the-users-feature/README.md","articles":[]},"previous":{"title":"Fastify App Scaffold","level":"3.3.1","depth":2,"path":"howto/my-first-rest-api/010-fastify-app-scaffold/README.md","ref":"./howto/my-first-rest-api/010-fastify-app-scaffold/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/my-first-rest-api/020-fastify-home-page/README.md","mtime":"2021-09-30T10:34:03.535Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-09T09:41:33.206Z"},"basePath":"../../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Connect to Postgres as a Service","level":"3.3.5","depth":2,"next":{"title":"Integrate Services and Features","level":"3.3.6","depth":2,"path":"howto/my-first-rest-api/060-integrate-services-and-features/README.md","ref":"./howto/my-first-rest-api/060-integrate-services-and-features/README.md","articles":[]},"previous":{"title":"Add a New User","level":"3.3.4","depth":2,"path":"howto/my-first-rest-api/040-add-new-user/README.md","ref":"./howto/my-first-rest-api/040-add-new-user/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/my-first-rest-api/050-postgres-service/README.md","mtime":"2021-10-03T06:50:02.832Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-09T09:41:33.206Z"},"basePath":"../../..","book":{"language":""}});
         });
     </script>
 </div>
