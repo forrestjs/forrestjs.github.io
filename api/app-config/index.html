@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>setContext · GitBook</title>
+        <title>The App Config · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -72,7 +72,7 @@
     <link rel="next" href="../create-hook/README.md" />
     
     
-    <link rel="prev" href="../get-config/README.md" />
+    <link rel="prev" href="../app-context/" />
     
 
     </head>
@@ -381,12 +381,12 @@
         
         
     
-        <li class="chapter " data-level="4.1" data-path="../set-config/README.md">
+        <li class="chapter " data-level="4.1" data-path="../app-context/">
             
-                <span>
+                <a href="../app-context/">
             
                     
-                    setConfig
+                    The App Context
             
                 </a>
             
@@ -394,25 +394,12 @@
             
         </li>
     
-        <li class="chapter " data-level="4.2" data-path="../get-config/README.md">
-            
-                <span>
-            
-                    
-                    getConfig
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter active" data-level="4.3" data-path="./">
+        <li class="chapter active" data-level="4.2" data-path="./">
             
                 <a href="./">
             
                     
-                    setContext
+                    The App Config
             
                 </a>
             
@@ -420,7 +407,7 @@
             
         </li>
     
-        <li class="chapter " data-level="4.4" data-path="../create-hook/README.md">
+        <li class="chapter " data-level="4.3" data-path="../create-hook/README.md">
             
                 <span>
             
@@ -433,7 +420,7 @@
             
         </li>
     
-        <li class="chapter " data-level="4.5" data-path="../register-action/README.md">
+        <li class="chapter " data-level="4.4" data-path="../register-action/README.md">
             
                 <span>
             
@@ -446,7 +433,7 @@
             
         </li>
     
-        <li class="chapter " data-level="4.6" data-path="../register-hook/README.md">
+        <li class="chapter " data-level="4.5" data-path="../register-hook/README.md">
             
                 <span>
             
@@ -1239,7 +1226,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >setContext</a>
+        <a href="../.." >The App Config</a>
     </h1>
 </div>
 
@@ -1254,11 +1241,65 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 class="tutorial-step" id="forrestjs-api-&#xBB;-setcontext"><span>ForrestJS API &#xBB;</span> setContext()</h1>
+                                <h1 class="tutorial-step" id="forrestjs-api-&#xBB;-the-app-config"><span>ForrestJS API &#xBB;</span> The App Config</h1>
 
-<p><a href="../README.md">ForrestJS API</a> &#xBB; <a href="./">setContext()</a></p>
+<p><a href="../README.md">ForrestJS API</a> &#xBB; <a href="./">The App Config</a></p>
 <hr>
-<h1 id="setcontext">setContext()</h1>
+<h1 id="the-app-config">The App Config</h1>
+<p>A ForrestJS App shares a piece of memory where to <strong>collect any boot-time configuration</strong> and the API to access and manipulate it.</p>
+<h2 id="provide-the-apps-configuration">Provide the App&apos;s Configuration</h2>
+<p>You can use the declarative style where the settings are provided as a simple JavaScript object:</p>
+<pre><code class="lang-js">runHookApp({
+  settings: {
+    key: <span class="hljs-string">&apos;value&apos;</span>,
+  },
+});
+</code></pre>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/app-config-declarative-dcqg5?file=/src/index.js:1101-1162" target="_blank">https://codesandbox.io/s/app-config-declarative-dcqg5?file=/src/index.js:1101-1162</a></p>
+<hr>
+<p>Or run a more rich settings composition, using an asynchronous function that can perform calculations, or maybe <strong>fetch some secrects from a vault</strong>:</p>
+<pre><code class="lang-js">runHookApp({
+  settings: <span class="hljs-keyword">async</span> () =&gt; {
+    <span class="hljs-keyword">return</span> {
+      key: <span class="hljs-string">&apos;value&apos;</span>,
+    };
+  },
+});
+</code></pre>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/app-config-programmatic-bbhg7?file=/src/index.js:53-484" target="_blank">https://codesandbox.io/s/app-config-programmatic-bbhg7?file=/src/index.js:53-484</a></p>
+<hr>
+<h2 id="reading-from-the-configuration">Reading From The Configuration</h2>
+<p>Use <code>getConfig(key [, defaultValue])</code> to read from the App&apos;s configuration:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> planet = getConfig(<span class="hljs-string">&apos;user.address.planet&apos;</span>);
+</code></pre>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/app-config-declarative-dcqg5?file=/src/index.js:310-386" target="_blank">https://codesandbox.io/s/app-config-declarative-dcqg5?file=/src/index.js:310-386</a></p>
+<hr>
+<p>You can be very specific about the info you ask as <strong>the path is formally checked</strong> and the <code>getConfig()</code> will throw an error in case the required path does not exists. This behavior helps you to avoid typos in the data-paths you plan to access.</p>
+<pre><code class="lang-js"><span class="hljs-keyword">try</span> {
+  getConfig(<span class="hljs-string">&apos;foo.bar.does.not.exists&apos;</span>);
+} <span class="hljs-keyword">catch</span> (err) {
+  <span class="hljs-built_in">console</span>.log(err.message);
+}
+</code></pre>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/app-config-declarative-dcqg5?file=/src/index.js:632-807" target="_blank">https://codesandbox.io/s/app-config-declarative-dcqg5?file=/src/index.js:632-807</a></p>
+<hr>
+<h2 id="default-values">Default Values</h2>
+<p>It may happen that you want to apply a default value to a non existing config key.</p>
+<p>This could be useful in case you want to set a loose dependency on an optional Service or Feature that may or may not provide some information:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> optData = getConfig(<span class="hljs-string">&apos;opt.data&apos;</span>, <span class="hljs-string">&apos;foobar&apos;</span>);
+</code></pre>
+<blockquote>
+<p>When using the default value you (obviously) loose the strict check on the path&apos;s correctness. Be careful with that!</p>
+</blockquote>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/app-config-declarative-dcqg5?file=/src/index.js:813-1037" target="_blank">https://codesandbox.io/s/app-config-declarative-dcqg5?file=/src/index.js:813-1037</a></p>
+<hr>
+<h2 id="array-support">Array Support</h2>
+<p>The set/get config is based on a small utility called <a href="https://www.npmjs.com/package/@marcopeg/dotted" target="_blank">dotted</a>. There is a primitive support for accessing data in array format. Please refer to the documentation in the NPM page.</p>
 
                                 
                                 </section>
@@ -1286,7 +1327,7 @@
 
             
                 
-                <a href="../get-config/README.md" class="navigation navigation-prev " aria-label="Previous page: getConfig">
+                <a href="../app-context/" class="navigation navigation-prev " aria-label="Previous page: The App Context">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
@@ -1302,7 +1343,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"setContext","level":"4.3","depth":1,"next":{"title":"createHook","level":"4.4","depth":1,"path":"api/create-hook/README.md","ref":"./api/create-hook/README.md","articles":[]},"previous":{"title":"getConfig","level":"4.2","depth":1,"path":"api/get-config/README.md","ref":"./api/get-config/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu","livereload"],"pluginsConfig":{"collapsible-menu":{},"livereload":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/set-context/README.md","mtime":"2021-10-01T09:27:22.095Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-10T07:19:44.695Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"The App Config","level":"4.2","depth":1,"next":{"title":"createHook","level":"4.3","depth":1,"path":"api/create-hook/README.md","ref":"./api/create-hook/README.md","articles":[]},"previous":{"title":"The App Context","level":"4.1","depth":1,"path":"api/app-context/README.md","ref":"./api/app-context/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu","livereload"],"pluginsConfig":{"collapsible-menu":{},"livereload":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/app-config/README.md","mtime":"2021-10-10T14:59:16.881Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-10T14:36:55.735Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
