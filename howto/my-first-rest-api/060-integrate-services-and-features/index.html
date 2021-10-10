@@ -69,7 +69,7 @@
     <link rel="shortcut icon" href="../../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../../../api/set-config/README.md" />
+    <link rel="next" href="../070-schema-and-data-seeding/" />
     
     
     <link rel="prev" href="../050-postgres-service/" />
@@ -330,6 +330,32 @@
             
         </li>
     
+        <li class="chapter " data-level="3.3.7" data-path="../070-schema-and-data-seeding/">
+            
+                <a href="../070-schema-and-data-seeding/">
+            
+                    
+                    Schema & Data Seeding
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="3.3.8" data-path="../080-integrate-services-and-services/">
+            
+                <a href="../080-integrate-services-and-services/">
+            
+                    
+                    Integrate Services And Services
+            
+                </a>
+            
+
+            
+        </li>
+    
 
             </ul>
             
@@ -381,12 +407,38 @@
             
         </li>
     
-        <li class="chapter " data-level="4.4" data-path="../../../api/get-context/README.md">
+        <li class="chapter " data-level="4.4" data-path="../../../api/create-hook/README.md">
             
                 <span>
             
                     
-                    getContext
+                    createHook
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.5" data-path="../../../api/register-action/README.md">
+            
+                <span>
+            
+                    
+                    registerAction
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.6" data-path="../../../api/register-hook/README.md">
+            
+                <span>
+            
+                    
+                    registerHook
             
                 </a>
             
@@ -1224,9 +1276,64 @@ setContext(<span class="hljs-string">&quot;pg.query&quot;</span>, query);
 })
 </code></pre>
 <p>As you may have guessed already, that&apos;s exactly what we&apos;re going to do.</p>
-<h3 id="register-service-hooks">Register Service Hooks</h3>
-<p>The first step is to build a <em>hooks manifest</em> for the </p>
-<p>[[ TO BE CONTINUED ]]</p>
+<h2 id="register-services-hooks">Register Service&apos;s Hooks</h2>
+<p>The first step is to build a <em>hooks manifest</em> for our service. This component will simply export all the new hooks, or <strong>extension points</strong>, that are offered by the service.</p>
+<p>Create a <code>/pg/hooks.js</code> module:</p>
+<pre><code class="lang-js"><span class="hljs-built_in">module</span>.exports = {
+  PG_READY: <span class="hljs-string">&quot;pg/ready&quot;</span>
+};
+</code></pre>
+<p>That&apos;s right. Hooks are just strings, but we always export them as a <strong>library of symbols</strong> so that ForrestJS can handle a formal check on hooks existance, <strong>avoiding us the pain of runtime misspell-driven mistakes</strong>.</p>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/060-integrate-services-and-features-z267f?file=/src/pg/hooks.js:0-45" target="_blank">https://codesandbox.io/s/060-integrate-services-and-features-z267f?file=/src/pg/hooks.js:0-45</a></p>
+<hr>
+<p>In your Service&apos;s manifest you can now use the <code>registerHook()</code> API to inform ForrestJS of these new hooks.</p>
+<p>Open <code>/pg/index.js</code> and add:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> hooks = <span class="hljs-built_in">require</span>(<span class="hljs-string">&quot;./hooks&quot;</span>);
+
+<span class="hljs-keyword">const</span> pg = ({ registerAction, registerHook }) =&gt; {
+  <span class="hljs-comment">// Register pg&apos;s extension points into ForrestJS hooks dictionary:</span>
+  registerHook(hooks);
+
+  ...
+});
+</code></pre>
+<p>With these steps performed, it is now possibile for any Feature (or other Service) to register an action to our <code>PG_READY</code> hook. Of course, there would be no effects still, as we haven&apos;t yet implemented the hook.</p>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/060-integrate-services-and-features-z267f?file=/src/pg/index.js:32-209" target="_blank">https://codesandbox.io/s/060-integrate-services-and-features-z267f?file=/src/pg/index.js:32-209</a></p>
+<hr>
+<h2 id="implement-a-hook">Implement A Hook</h2>
+<p>Implementing a hook looks much like <strong>calling a function</strong> using the <a href="../../api/create-hook/README.md"><code>createHook()</code> API</a>. We invoke a hook by its name, we can pass arguments to it, and we can collect its returning value(s).</p>
+<blockquote>
+<p>But we can&apos;t control what happens inside it, as different Features and Services are allowed to inject logic into it.</p>
+</blockquote>
+<p>With this theory covered, it&apos;s time to implent our shiny new hook right after a correct connection towards PostgreSQL is first established:</p>
+<pre><code class="lang-js">registerAction({
+  hook: <span class="hljs-string">&quot;$START_SERVICE&quot;</span>,
+  handler: <span class="hljs-keyword">async</span> ({ createHook }) =&gt; {
+    <span class="hljs-comment">// ... connect to PostgreSQL ...</span>
+
+    <span class="hljs-comment">// Call the hook:</span>
+    <span class="hljs-keyword">await</span> createHook.serie(hooks.PG_READY, { query, pool });
+  }
+});
+</code></pre>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/060-integrate-services-and-features-z267f?file=/src/pg/index.js:1435-1650" target="_blank">https://codesandbox.io/s/060-integrate-services-and-features-z267f?file=/src/pg/index.js:1435-1650</a></p>
+<hr>
+<h2 id="consume-the-new-hook">Consume the New Hook</h2>
+<p>Finally, we can consume that hook in our Users Feature:</p>
+<pre><code class="lang-js">registerAction({
+  hook: <span class="hljs-string">&quot;$PG_READY&quot;</span>,
+  handler: <span class="hljs-keyword">async</span> ({ query }) =&gt; {
+    <span class="hljs-keyword">const</span> res = <span class="hljs-keyword">await</span> query(<span class="hljs-string">&quot;SELECT NOW()&quot;</span>);
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&quot;on pg/ready&quot;</span>, res.rows);
+  }
+});
+</code></pre>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/060-integrate-services-and-features-z267f?file=/src/users/index.js:626-804" target="_blank">https://codesandbox.io/s/060-integrate-services-and-features-z267f?file=/src/users/index.js:626-804</a></p>
+<hr>
 
                                 
                                 </section>
@@ -1259,7 +1366,7 @@ setContext(<span class="hljs-string">&quot;pg.query&quot;</span>, query);
                 </a>
                 
                 
-                <a href="../../../api/set-config/README.md" class="navigation navigation-next " aria-label="Next page: setConfig">
+                <a href="../070-schema-and-data-seeding/" class="navigation navigation-next " aria-label="Next page: Schema & Data Seeding">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -1270,7 +1377,7 @@ setContext(<span class="hljs-string">&quot;pg.query&quot;</span>, query);
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Integrate Services and Features","level":"3.3.6","depth":2,"next":{"title":"setConfig","level":"4.1","depth":1,"path":"api/set-config/README.md","ref":"./api/set-config/README.md","articles":[]},"previous":{"title":"Connect to Postgres as a Service","level":"3.3.5","depth":2,"path":"howto/my-first-rest-api/050-postgres-service/README.md","ref":"./howto/my-first-rest-api/050-postgres-service/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/my-first-rest-api/060-integrate-services-and-features/README.md","mtime":"2021-10-05T14:18:10.248Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-09T09:41:33.206Z"},"basePath":"../../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Integrate Services and Features","level":"3.3.6","depth":2,"next":{"title":"Schema & Data Seeding","level":"3.3.7","depth":2,"path":"howto/my-first-rest-api/070-schema-and-data-seeding/README.md","ref":"./howto/my-first-rest-api/070-schema-and-data-seeding/README.md","articles":[]},"previous":{"title":"Connect to Postgres as a Service","level":"3.3.5","depth":2,"path":"howto/my-first-rest-api/050-postgres-service/README.md","ref":"./howto/my-first-rest-api/050-postgres-service/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/my-first-rest-api/060-integrate-services-and-features/README.md","mtime":"2021-10-09T12:46:08.905Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-10T07:19:31.672Z"},"basePath":"../../..","book":{"language":""}});
         });
     </script>
 </div>
