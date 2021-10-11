@@ -69,10 +69,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../register-hook/README.md" />
+    <link rel="next" href="../create-hook/" />
     
     
-    <link rel="prev" href="../create-hook/README.md" />
+    <link rel="prev" href="../../howto/my-first-rest-api/090-evolve-your-schema/" />
     
 
     </head>
@@ -381,46 +381,7 @@
         
         
     
-        <li class="chapter " data-level="4.1" data-path="../app-context/">
-            
-                <a href="../app-context/">
-            
-                    
-                    The App Context
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="4.2" data-path="../app-config/">
-            
-                <a href="../app-config/">
-            
-                    
-                    The App Config
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter " data-level="4.3" data-path="../create-hook/README.md">
-            
-                <span>
-            
-                    
-                    Create Hook
-            
-                </a>
-            
-
-            
-        </li>
-    
-        <li class="chapter active" data-level="4.4" data-path="./">
+        <li class="chapter active" data-level="4.1" data-path="./">
             
                 <a href="./">
             
@@ -433,12 +394,38 @@
             
         </li>
     
-        <li class="chapter " data-level="4.5" data-path="../register-hook/README.md">
+        <li class="chapter " data-level="4.2" data-path="../create-hook/">
             
-                <span>
+                <a href="../create-hook/">
             
                     
-                    registerHook
+                    Create Hook
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.3" data-path="../app-context/">
+            
+                <a href="../app-context/">
+            
+                    
+                    The App Context
+            
+                </a>
+            
+
+            
+        </li>
+    
+        <li class="chapter " data-level="4.4" data-path="../app-config/">
+            
+                <a href="../app-config/">
+            
+                    
+                    The App Config
             
                 </a>
             
@@ -1246,8 +1233,8 @@
 <p><a href="../README.md">ForrestJS API</a> &#xBB; <a href="./">Register Action</a></p>
 <hr>
 <h1 id="register-action">Register Action</h1>
-<p>Register and Action to a hook is the way we add new capabilities to a ForrestJS App.</p>
-<p>You normally use the <code>registerAction()</code> API inside a Service or Feature&apos;s Manifest function:</p>
+<p>To &quot;register an <em>Action</em> to a <em>Hook</em>&quot; is the way we introduce new capabilities to a ForrestJS <em>App</em>.</p>
+<p>You normally use the <code>registerAction()</code> API inside a <em>Service</em> or <em>Feature</em>&apos;s <em>Manifest</em> function:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> firstFeature = ({ registerAction }) =&gt; {
   registerAction({
     hook: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
@@ -1368,12 +1355,12 @@ Init First Feature
 
             
                 
-                <a href="../create-hook/README.md" class="navigation navigation-prev " aria-label="Previous page: Create Hook">
+                <a href="../../howto/my-first-rest-api/090-evolve-your-schema/" class="navigation navigation-prev " aria-label="Previous page: Evolve Your Schema">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="../register-hook/README.md" class="navigation navigation-next " aria-label="Next page: registerHook">
+                <a href="../create-hook/" class="navigation navigation-next " aria-label="Next page: Create Hook">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -1384,7 +1371,7 @@ Init First Feature
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Register Action","level":"4.4","depth":1,"next":{"title":"registerHook","level":"4.5","depth":1,"path":"api/register-hook/README.md","ref":"./api/register-hook/README.md","articles":[]},"previous":{"title":"Create Hook","level":"4.3","depth":1,"path":"api/create-hook/README.md","ref":"./api/create-hook/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu","livereload"],"pluginsConfig":{"collapsible-menu":{},"livereload":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/register-action/README.md","mtime":"2021-10-11T05:28:10.351Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-10T14:36:55.735Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Register Action","level":"4.1","depth":1,"next":{"title":"Create Hook","level":"4.2","depth":1,"path":"api/create-hook/README.md","ref":"./api/create-hook/README.md","articles":[]},"previous":{"title":"Evolve Your Schema","level":"3.3.9","depth":2,"path":"howto/my-first-rest-api/090-evolve-your-schema/README.md","ref":"./howto/my-first-rest-api/090-evolve-your-schema/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu","livereload"],"pluginsConfig":{"collapsible-menu":{},"livereload":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/register-action/README.md","mtime":"2021-10-11T07:57:06.265Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-10T14:36:55.735Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
