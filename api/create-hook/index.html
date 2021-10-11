@@ -1326,12 +1326,46 @@ createHook.sync(myServiceHooks.MY_SERVICE_INIT);
 </code></pre>
 <p>&#x1F449; With this option, you must be really sure that you are referencing the correct Hook, as typos are on you here!</p>
 <h2 id="passing-arguments">Passing Arguments</h2>
-<p>[[TO BE COMPLETED]]</p>
+<p>When you create a Hook you can pass arguments to it as a single object:</p>
+<pre><code class="lang-js">createHook.sync(<span class="hljs-string">&apos;hookName&apos;</span>, {
+  foo: <span class="hljs-string">&apos;bar&apos;</span>,
+});
+
+registerAction({
+  hook: <span class="hljs-string">&apos;hookName&apos;</span>,
+  handler: ({ foo }) =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`foo: <span class="hljs-subst">${foo}</span>`</span>),
+});
+</code></pre>
+<p>This mechanic is often used to pass down APIs and/or utility functions.</p>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/create-hook-arguments-pgmwz?file=/src/index.js" target="_blank">https://codesandbox.io/s/create-hook-arguments-pgmwz?file=/src/index.js</a></p>
+<hr>
 <h2 id="collecting-actions-returing-values">Collecting Actions Returing Values</h2>
-<p>[[TO BE COMPLETED]]</p>
+<p>It is also possible to collect and manipulate each registered Action&apos;s returning values:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> data = createHook.sync(<span class="hljs-string">&apos;foobar&apos;</span>);
+
+registerAction({
+  hook: <span class="hljs-string">&apos;foobar&apos;</span>,
+  handler: () =&gt; <span class="hljs-number">5</span>,
+});
+</code></pre>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/create-hook-returning-values-66xq3?file=/src/index.js" target="_blank">https://codesandbox.io/s/create-hook-returning-values-66xq3?file=/src/index.js</a></p>
+<hr>
+<p>Each Action&apos;s returning value is represented by a <em>positional array</em> with:</p>
+<ul>
+<li>[0] raw returning value</li>
+<li>[1] action configuration</li>
+<li>[2] hook configuration</li>
+</ul>
+<p>[[TO BE EXPANDED]]</p>
 <h2 id="createhooksync">createHook.sync</h2>
-<p>[[TO BE COMPLETED]]</p>
+<p>The <code>sync</code> method is the most common and used Hook. It runs its registered actions in serie, sorted by priority, and it expects only synchronous functions.</p>
+<p>Use this method to provide ways to enrich or modify configuration at boot time. A good example is how we register routes in the <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-fastify/src/start-service-handler.js#L41" target="_blank">Fastify Service</a>.</p>
 <h2 id="createhookserie">createHook.serie</h2>
+<hr>
+<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/create-hook-serie-e6670?file=/src/index.js" target="_blank">https://codesandbox.io/s/create-hook-serie-e6670?file=/src/index.js</a></p>
+<hr>
 <p>[[TO BE COMPLETED]]</p>
 <h2 id="createhookparallel">createHook.parallel</h2>
 <p>[[TO BE COMPLETED]]</p>
@@ -1380,7 +1414,7 @@ createHook.sync(myServiceHooks.MY_SERVICE_INIT);
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Create Hook","level":"4.2","depth":1,"next":{"title":"The App Context","level":"4.3","depth":1,"path":"api/app-context/README.md","ref":"./api/app-context/README.md","articles":[]},"previous":{"title":"Register Action","level":"4.1","depth":1,"path":"api/register-action/README.md","ref":"./api/register-action/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu","livereload"],"pluginsConfig":{"collapsible-menu":{},"livereload":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/create-hook/README.md","mtime":"2021-10-11T12:59:59.795Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-10T14:36:55.735Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Create Hook","level":"4.2","depth":1,"next":{"title":"The App Context","level":"4.3","depth":1,"path":"api/app-context/README.md","ref":"./api/app-context/README.md","articles":[]},"previous":{"title":"Register Action","level":"4.1","depth":1,"path":"api/register-action/README.md","ref":"./api/register-action/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu","livereload"],"pluginsConfig":{"collapsible-menu":{},"livereload":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/create-hook/README.md","mtime":"2021-10-11T14:41:17.331Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2021-10-10T14:36:55.735Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
