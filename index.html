@@ -640,14 +640,12 @@
                                 <h1 id="forrestjs---modular-nodejs-apps">@ForrestJS - Modular NodeJS Apps</h1>
 <p>Hey mate, thank you for landing here!</p>
 <blockquote>
-<p>ForrestJS helps you to setup a 
-<strong>Modular NodeJS App</strong>
-based on the NodeJS/React stack.</p>
+<p>ForrestJS helps you build a <strong>Modular JavaScript</strong> application where you can (almost) forget about the infrastructure and <strong>focus on your business value</strong>.</p>
 </blockquote>
-<p><a href="https://forrestjs.github.io" target="_blank">.: Read the full documentation here :.</a></p>
 <h2 id="try-it-out">Try It Out:</h2>
 <p>The easiest way to start with ForrestJS is to see it in action on CodeSandbox:</p>
 <ul>
+<li>NodeJS with Fastify demos:<ul>
 <li><a href="https://codesandbox.io/s/service-fastify-th8dq" target="_blank">Basic webapp with Fastify</a></li>
 <li><a href="https://codesandbox.io/s/service-fastify-static-6u8mm" target="_blank">service: Static Website</a></li>
 <li><a href="https://codesandbox.io/s/service-fastify-healthz-4g3my" target="_blank">service: Healthcheck</a></li>
@@ -657,9 +655,17 @@ based on the NodeJS/React stack.</p>
 <li><a href="https://codesandbox.io/s/service-fastify-apollo-80oug" target="_blank">service: GraphQL Client (with Apollo)</a></li>
 <li><a href="https://codesandbox.io/s/service-fastify-fetchq-0by8x" target="_blank">Handling Queues using Fetchq</a></li>
 </ul>
+</li>
+<li>ReactJS demos:<ul>
+<li><a href="https://codesandbox.io/s/react-root-basic-tlo6q" target="_blank">Basic ReactJS App rendering</a></li>
+<li><a href="https://codesandbox.io/s/react-router-64sw4?file=/src/index.js" target="_blank">Implement ReactRouter</a></li>
+<li><a href="https://codesandbox.io/s/react-mui-8rx74?file=/src/index.js" target="_blank">Adopt MaterialUI components library</a></li>
+</ul>
+</li>
+</ul>
 <h2 id="what-you-get">What You Get</h2>
 <ul>
-<li>Modular and interoperable architecture perfectly suited for microservices</li>
+<li>Modular and interoperable architecture perfectly suited for micro-services and micro-frontends</li>
 <li>App lifecycle hooks to coordinate booting procedures</li>
 <li>Modules composition traceability and reporting</li>
 <li>Configuration API</li>
@@ -667,29 +673,32 @@ based on the NodeJS/React stack.</p>
 <li>Ready-to-use services available on NPM</li>
 </ul>
 <h2 id="spoiler-alert">Spoiler Alert</h2>
-<p>&#x1F913; This is one of the many <strong>opinionated setup</strong> available on the web. 
-It&apos;s mine, my own, my precious... No kidding, this is simply how 
-I believe any modern web app should be organized to 
-<strong>maximize productivity</strong> and improve <strong>developer&apos;s experience</strong>.</p>
-<p>&#x1F449; Although this is by all means my own understanding of the 
-<em>modularity challenge</em>, I did my best to use only existing and 
-well known open source projects, and 
-<strong>limited my own code to the bare minimum</strong>.</p>
+<p>&#x1F913; This is one of the many <strong>opinionated setup</strong> available on the web.
+It&apos;s mine, my own, my precious... No kidding, this is simply how
+I believe any modern web app should be organized to
+<strong>maximize productivity</strong> and improve the <strong>Developer&apos;s Experience</strong>.</p>
+<p>&#x1F449; Although this is by all means my own understanding of the
+<em>modularity challenge</em>, I did my best to use exclusively existing and
+well known open source projects, and
+<strong>limited my own coding to the bare minimum</strong>.</p>
 <h2 id="still-building">Still Building...</h2>
-<p>This package is quite stable. Yet, I&apos;m till actively working on it 
+<p>This package is quite stable. Yet, I&apos;m still actively working on it
 and you can expect new features and <strong>slight changes in the APIs</strong>.</p>
+<blockquote>
+<p>I follow the <strong>semantic versioning</strong> practice, so you can expect breaking changs whenever you see a bump in the major version. In all the other cases I take extreeme care in respecting retro-compatibility.</p>
+</blockquote>
 <p>Nevertheless I&apos;m already using it in production, and I know quite
-a few companies who trust <em>ForrestJS</em> (and me, thanks mates &#x1F64F;) 
+a few companies who trust <em>ForrestJS</em> (and me, thanks mates &#x1F64F;)
 for their business-related projects.</p>
-<p>&#x1F91D; I commit to do my best in preserving backward compatibility and keep 
+<p>&#x1F91D; I commit to do my best in preserving backward compatibility and keep
 it up-to-date with new versions of the few dependencies that we use.</p>
-<p>WANNA HELP ME?  </p>
+<p>WANNA HELP ME?</p>
 <h2 id="you-should-know">You should know...</h2>
-<p>I wrote this documentation for the mid-experienced engineer. 
+<p>I wrote this documentation for the mid-experienced engineer.
 It&apos;s an evolving project and <strong>you may need to resolve to the source
 code to fill the gaps</strong> of what I have documented so far.</p>
 <blockquote>
-<p>I tested this documentation quite well, but bugs will always 
+<p>I tested this documentation quite well, but bugs will always
 to be found!<br><strong>Please report them as new issues.</strong></p>
 </blockquote>
 <p>Let&apos; cut it short; here is the list of the things that you should be already acquainted with:</p>
@@ -697,8 +706,9 @@ to be found!<br><strong>Please report them as new issues.</strong></p>
 <li>Javascript in general, ES6 in particular</li>
 <li>NodeJS, NPM, Yarn</li>
 <li>Fastify (or similar middleware based tool)</li>
+<li>ReactJS</li>
 </ul>
-<p>I don&apos;t expect you to be an expert on all those tools, but it would 
+<p>I don&apos;t expect you to be an expert on all those tools, but it would
 be so good if you have a basic understanding of how to use them.</p>
 <p>&#x1F449; <a href="https://marcopeg.com/2020/javascript-the-good-parts" target="_blank">Here is a good article you should check out to pump-up your Javascript skills</a> &#x1F448;</p>
 <h2 id="licence">LICENCE</h2>
@@ -741,7 +751,7 @@ be so good if you have a basic understanding of how to use them.</p>
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"ForrestJS","level":"1.1","depth":1,"next":{"title":"Give us a star on GitHub!","level":"1.2","depth":1,"url":"https://github.com/forrestjs/forrestjs","ref":"https://github.com/forrestjs/forrestjs","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2021-09-23T10:01:04.510Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-06T09:04:29.546Z"},"basePath":".","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"ForrestJS","level":"1.1","depth":1,"next":{"title":"Give us a star on GitHub!","level":"1.2","depth":1,"url":"https://github.com/forrestjs/forrestjs","ref":"https://github.com/forrestjs/forrestjs","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"README.md","mtime":"2022-02-06T09:16:26.984Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-06T09:17:47.414Z"},"basePath":".","book":{"language":""}});
         });
     </script>
 </div>
