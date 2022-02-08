@@ -647,67 +647,83 @@
 <hr>
 <h1 id="a-features-anatomy">A Feature&apos;s Anatomy</h1>
 <p>A ForrestJS <em>Feature</em> is a <strong>JavaScript module</strong> that receives a bunch of APIs and <strong>describes how to integrate</strong> with the rest of the <em>App</em>.</p>
-<p>There are two and a half ways to create a feature:</p>
+<p>Integrations happen via <strong>creating Extensions</strong> and <strong>registering Actions</strong>.</p>
+<blockquote>
+<p>Most of the times, you will register Actions to Extensions that are provided by
+stuff that you download from NPM. Those are usually called Services and provide
+wrappers around famous libraries like Fastify or React.</p>
+</blockquote>
+<p>&#x1F449; The <strong>Action Handlers</strong> are regular Javascript functions that receive the ForrestJS APIs and (maybe) some arguments from the Extension.</p>
+<p><strong>You will implement your business logic into Action Handlers.</strong></p>
+<hr>
+<p>There are <strong>two and a half ways</strong> to create a Feature:</p>
 <ul>
 <li>Declarative Features<ul>
-<li>As a <em>declarative action</em></li>
-<li>As a <em>list of declarative actions</em></li>
+<li>As a <em>declarative Action manifest</em></li>
+<li>As a <em>list of declarative Action manifests</em></li>
 </ul>
 </li>
 <li>Functional Features</li>
 </ul>
 <h3 id="declarative-features">Declarative Features</h3>
 <p>This is the easiest way to describe a Feature and it will be enough most of the times:</p>
-<pre><code class="lang-js"><span class="hljs-keyword">const</span> forrestjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/hooks&apos;</span>);
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> forrestjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/core&apos;</span>);
 
-<span class="hljs-comment">// This Feature registers to one single Action:</span>
+<span class="hljs-comment">// This Feature registers one single Action to the Extension named &quot;FINISH&quot;:</span>
 <span class="hljs-keyword">const</span> myFirstFeature = {
-  hook: <span class="hljs-string">&apos;$FINISH&apos;</span>,
+  target: <span class="hljs-string">&apos;$FINISH&apos;</span>,
   handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Hello World&apos;</span>),
 };
 
-<span class="hljs-comment">// This Feature registers to multiple Actions:</span>
+<span class="hljs-comment">// This Feature registers multiple Actions to a variety of Extensions:</span>
 <span class="hljs-comment">// (same as before, but it&apos;s a list)</span>
 <span class="hljs-keyword">const</span> mySecondFeature = [
   {
-    hook: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
+    target: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
     handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;On mySecondFeature Init&apos;</span>),
   },
   {
-    hook: <span class="hljs-string">&apos;$START_FEATURE&apos;</span>,
+    target: <span class="hljs-string">&apos;$START_FEATURE&apos;</span>,
     handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;On mySecondFeature Start&apos;</span>),
   },
   {
-    hook: <span class="hljs-string">&apos;$FINISH&apos;</span>,
+    target: <span class="hljs-string">&apos;$FINISH&apos;</span>,
     handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;On mySecondFeature Finish&apos;</span>),
   },
 ];
 
-<span class="hljs-comment">// Run the ForrestJS App</span>
+<span class="hljs-comment">// Run the ForrestJS App:</span>
 forrestjs.run([myFirstFeature, mySecondFeature]);
 </code></pre>
 <hr>
 <p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/forrestjs-declarative-feature-6no25" target="_blank">https://codesandbox.io/s/forrestjs-declarative-feature-6no25</a></p>
 <hr>
 <h3 id="functional-features">Functional Features</h3>
-<p>Functional Features are just regular Javascript functions that <strong>receive the full APIs</strong> of a ForrestJS App. They can simply perform more convoluted logic while registering to some Actions.</p>
+<p>Functional Features are just regular Javascript functions that <strong>receive the full APIs</strong> of a ForrestJS App. They can simply perform more convoluted logic before registering some Actions.</p>
 <p>Start by creating a feature&apos;s scaffold into <code>my-first-feature.js</code>:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> myFirstFeature = ({ registerAction }) =&gt; {
   <span class="hljs-comment">// Perform convoluted logic at register time:</span>
   <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;On myFirstFeature Register&apos;</span>);
 
-  <span class="hljs-comment">// Return one or multiple Actions you want to register to:</span>
+  <span class="hljs-comment">// You can use the APIs to register new Actions:</span>
+  registerAction({
+    target: <span class="hljs-string">&apos;$FINISH&apos;</span>,
+    handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Just a roughe FINISH action handler&apos;</span>),
+  });
+
+  <span class="hljs-comment">// or return one or multiple Actions you want to register</span>
+  <span class="hljs-comment">// similarly to the declarative way:</span>
   <span class="hljs-keyword">return</span> [
     {
-      hook: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
+      target: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
       handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;On myFirstFeature Init&apos;</span>),
     },
     {
-      hook: <span class="hljs-string">&apos;$START_FEATURE&apos;</span>,
+      target: <span class="hljs-string">&apos;$START_FEATURE&apos;</span>,
       handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;On myFirstFeature Start&apos;</span>),
     },
     {
-      hook: <span class="hljs-string">&apos;$FINISH&apos;</span>,
+      target: <span class="hljs-string">&apos;$FINISH&apos;</span>,
       handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;On myFirstFeature Finish&apos;</span>),
     },
   ];
@@ -716,7 +732,7 @@ forrestjs.run([myFirstFeature, mySecondFeature]);
 <span class="hljs-built_in">module</span>.exports = myFirstFeature;
 </code></pre>
 <p>Once you&apos;ve created the feature, simply add it to your App&apos;s manifest:</p>
-<pre><code class="lang-js"><span class="hljs-keyword">const</span> forrestjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/hooks&apos;</span>);
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> forrestjs = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;@forrestjs/core&apos;</span>);
 
 <span class="hljs-comment">// Import your Feature</span>
 <span class="hljs-keyword">const</span> myFirstFeature = <span class="hljs-built_in">require</span>(<span class="hljs-string">&apos;./my-first-feature&apos;</span>);
@@ -733,11 +749,11 @@ forrestjs.run([myFirstFeature]);
 <h2 id="its-just-a-manifest">It&apos;s Just a Manifest</h2>
 <p>I believe that it is important to point out that <strong>both App&apos;s and Feature&apos;s entry files are just manifests</strong>.</p>
 <ul>
-<li>The single responsibility of an <strong>App&apos;s Manifest</strong> is to describe which <em>Services</em> and <em>Features</em> are at play in the <em>App</em></li>
-<li>The single responsibility of a <strong>Feature&apos;s Manifest</strong> is to describe how the Feature integrates with the <em>App</em>&apos;s lifecycle and <em>Services</em></li>
+<li>The single responsibility of an <strong>App&apos;s Manifest</strong> is to describe which Services and Features compose your App</li>
+<li>The single responsibility of a <strong>Feature&apos;s Manifest</strong> is to describe how the Feature integrates with the App&apos;s lifecycle and Services by registering Actions</li>
 </ul>
 <blockquote>
-<p>All your logic should always be placed inside a registered action (see next chapter)</p>
+<p>All your logic should always be placed inside a registered Aaction Handler (see next chapter)</p>
 </blockquote>
 <h2 id="different-ways-to-export-a-feature">Different Ways to Export a Feature</h2>
 <p>It&apos;s said that:</p>
@@ -760,6 +776,29 @@ exports.register = () =&gt; {};
 <h3 id="es6-export-style">ES6 Export Style</h3>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> myFirstFeature = () =&gt; {};
 <span class="hljs-keyword">export</span> <span class="hljs-keyword">default</span> myFirstFeature;
+</code></pre>
+<h3 id="declarative-way">Declarative Way</h3>
+<pre><code class="lang-js"><span class="hljs-comment">// Single Action</span>
+<span class="hljs-built_in">module</span>.exports = {
+  name: <span class="hljs-string">&apos;myFeatureName&apos;</span>,
+  target: <span class="hljs-string">&apos;$FINISH&apos;</span>,
+  handler: () =&gt; {},
+};
+
+<span class="hljs-comment">// Multiple Actions</span>
+<span class="hljs-comment">// (you have to explicitly set the name for each Action)</span>
+<span class="hljs-built_in">module</span>.exports = [
+  {
+    name: <span class="hljs-string">&apos;myFeatureName&apos;</span>,
+    target: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
+    handler: () =&gt; {},
+  },
+  {
+    name: <span class="hljs-string">&apos;myFeatureName&apos;</span>,
+    target: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
+    handler: () =&gt; {},
+  },
+];
 </code></pre>
 
                                 
@@ -804,7 +843,7 @@ exports.register = () =&gt; {};
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"A Feature Anathomy","level":"3.1.2","depth":2,"next":{"title":"The Boot Order & App's Lifecycle","level":"3.1.3","depth":2,"path":"howto/my-first-feature/030-forrestjs-app-lifecycle/README.md","ref":"./howto/my-first-feature/030-forrestjs-app-lifecycle/README.md","articles":[]},"previous":{"title":"ForrestJS App Scaffold","level":"3.1.1","depth":2,"path":"howto/my-first-feature/010-forrestjs-app-scaffold/README.md","ref":"./howto/my-first-feature/010-forrestjs-app-scaffold/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/my-first-feature/020-forrestjs-feature-anathomy/README.md","mtime":"2022-02-06T09:09:28.569Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-06T09:17:47.414Z"},"basePath":"../../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"A Feature Anathomy","level":"3.1.2","depth":2,"next":{"title":"The Boot Order & App's Lifecycle","level":"3.1.3","depth":2,"path":"howto/my-first-feature/030-forrestjs-app-lifecycle/README.md","ref":"./howto/my-first-feature/030-forrestjs-app-lifecycle/README.md","articles":[]},"previous":{"title":"ForrestJS App Scaffold","level":"3.1.1","depth":2,"path":"howto/my-first-feature/010-forrestjs-app-scaffold/README.md","ref":"./howto/my-first-feature/010-forrestjs-app-scaffold/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu","livereload"],"pluginsConfig":{"collapsible-menu":{},"livereload":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/my-first-feature/020-forrestjs-feature-anathomy/README.md","mtime":"2022-02-08T16:24:07.012Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-08T15:56:53.622Z"},"basePath":"../../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -823,6 +862,10 @@ exports.register = () =&gt; {};
     
         
         <script src="../../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../../gitbook/gitbook-plugin-livereload/plugin.js"></script>
         
     
         
