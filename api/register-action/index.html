@@ -69,7 +69,7 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../create-hook/" />
+    <link rel="next" href="../create-extension/" />
     
     
     <link rel="prev" href="../../howto/my-first-react-app/060-add-react-router/" />
@@ -478,12 +478,12 @@
             
         </li>
     
-        <li class="chapter " data-level="4.2" data-path="../create-hook/">
+        <li class="chapter " data-level="4.2" data-path="../create-extension/">
             
-                <a href="../create-hook/">
+                <a href="../create-extension/">
             
                     
-                    Create Hook
+                    Create Extension
             
                 </a>
             
@@ -646,11 +646,11 @@
 <p><a href="../README.md">ForrestJS API</a> &#xBB; <a href="./">Register Action</a></p>
 <hr>
 <h1 id="register-action">Register Action</h1>
-<p>You need to <strong>register an <em>Action</em> into a <em>Hook</em></strong> to add functionalities to a ForrestJS App.</p>
+<p>You need to <strong>register an <em>Action</em> to an <em>Extension</em></strong> to add functionalities to a ForrestJS App.</p>
 <p>Use the <code>registerAction()</code> API inside a <em>Service</em> or <em>Feature</em>&apos;s <em>Manifest</em> function:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> myFirstFeature = ({ registerAction }) =&gt; {
   registerAction({
-    hook: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
+    target: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
     handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;My First Feature&apos;</span>),
   });
 };
@@ -660,7 +660,7 @@
 <p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/register-action-v64r4?file=/src/index.js:102-226" target="_blank">https://codesandbox.io/s/register-action-v64r4?file=/src/index.js:102-226</a></p>
 <hr>
 <h2 id="signature-variant">Signature Variant</h2>
-<p>You can use the compact signature variant <code>registerAction(hookName, handler)</code>:</p>
+<p>You can use the compact signature variant:<br><code>registerAction(extensionName, handler)</code>:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> actionHandler = () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Start First Feature&apos;</span>);
 registerAction(<span class="hljs-string">&apos;$START_FEATURE&apos;</span>, actionHandler);
 </code></pre>
@@ -671,35 +671,34 @@ registerAction(<span class="hljs-string">&apos;$START_FEATURE&apos;</span>, acti
 <p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/register-action-v64r4?file=/src/index.js:230-367" target="_blank">https://codesandbox.io/s/register-action-v64r4?file=/src/index.js:230-367</a></p>
 <hr>
 <h2 id="register-multiple-handlers">Register Multiple Handlers</h2>
-<p>A ForrestJS&apos; hook is just a pointer to a list of action handlers. Functions, really.</p>
-<p>Every time you register an action, you are simply adding yet another handler to the hook&apos;s array.</p>
+<p>A ForrestJS&apos; Extension is just a pointer to a list of Action Handlers.<br><em>Regular Javascript functions, really.</em></p>
+<p>Every time you register an Action, you are simply adding yet another handler to the Extension&apos;s array.</p>
 <pre><code class="lang-js">registerAction(<span class="hljs-string">&apos;$START_FEATURE&apos;</span>, () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;#1 handler&apos;</span>));
 registerAction(<span class="hljs-string">&apos;$START_FEATURE&apos;</span>, () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;#2 handler&apos;</span>));
 registerAction(<span class="hljs-string">&apos;$START_FEATURE&apos;</span>, () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;#3 handler&apos;</span>));
 </code></pre>
 <blockquote>
-<p>You can register as many action handlers as you may need to the same hook.<br><strong>DON&apos;T PUT EVERYTHING IN THE SAME FUNCTION</strong></p>
+<p>You can register as many Action Handlers as you may need to the same Extension.<br><strong>&#x1F449; DON&apos;T PUT EVERYTHING IN THE SAME FUNCTION</strong></p>
 </blockquote>
 <p>Modularity is gold!</p>
 <hr>
 <p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/register-action-v64r4?file=/src/index.js:371-607" target="_blank">https://codesandbox.io/s/register-action-v64r4?file=/src/index.js:371-607</a></p>
 <hr>
 <h2 id="the-handler-priority">The Handler Priority</h2>
-<p>Sometimes, you just need to be sure that a specific handler runs before or after anything else, or just after another particular action handler.</p>
+<p>Sometimes, you just need to be sure that a specific piece of logic runs before or after something else.</p>
 <blockquote>
 <p>This is mostly the case when 2 services establish some kind of soft-dependencies towards each other.
-We met this requirement while building our <a href="../howto/my-first-rest-api/080-integrate-services-and-services/README.md">PostgreSQL Connection Service</a>,
-when we integrated it with the <a href="https://github.com/forrestjs/forrestjs/tree/master/packages/service-fastify#readme" target="_blank">Fastify Service</a>.</p>
+We faced this situation while building our <a href="../howto/my-first-rest-api/080-integrate-services-and-services/README.md">PostgreSQL Connection Service</a>,
+and integrating it with the <a href="https://github.com/forrestjs/forrestjs/tree/master/packages/service-fastify#readme" target="_blank">Fastify Service</a>.</p>
 </blockquote>
-<p>Here is a simple example where 2 features register an action into the very same hook. Then they are listed into the App&apos;s features in the same order
-as they are written:</p>
+<p>Here is a simple example where 2 Features register an Action into the very same Extension. Then they are listed into the App&apos;s features in the same order as they are written:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> firstFeature = {
-  hook: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
+  target: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
   handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Init First Feature&apos;</span>),
 };
 
 <span class="hljs-keyword">const</span> secondFeature = {
-  hook: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
+  target: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
   handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Init Second Feature&apos;</span>),
 };
 
@@ -709,15 +708,15 @@ forrestjs.run([firstFeature, secondFeature]);
 <pre><code class="lang-bash">Init First Feature
 Init Second Feature
 </code></pre>
-<p>In order to reverse the output without changing the listing order would be to add the <code>priority</code> option to either the features:</p>
+<p>Play with the <code>priority</code> option in order to revert the output without changing the listing order:</p>
 <pre><code class="lang-js"><span class="hljs-keyword">const</span> firstFeature = {
-  hook: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
+  target: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
   handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Init First Feature&apos;</span>),
   priority: <span class="hljs-number">-1</span>,
 };
 
 <span class="hljs-keyword">const</span> secondFeature = {
-  hook: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
+  target: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
   handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;Init Second Feature&apos;</span>),
   priority: <span class="hljs-number">1</span>,
 };
@@ -728,19 +727,49 @@ forrestjs.run([firstFeature, secondFeature]);
 <pre><code class="lang-bash">Init Second Feature
 Init First Feature
 </code></pre>
-<p>The action handlers registered to the same hook are sorted from the higher priority to the lower. The default priority is <code>0</code> and you can play with this option so to <strong>affect the execution order independently from the listing order</strong>.</p>
+<p>The Action Handlers registered to the same Extension are sorted from the higher Priority to the lower. The default Priority is <code>0</code> and you can play with this option so to <strong>affect the execution order independently from the listing order</strong>.</p>
 <blockquote>
-<p><strong>NOTE:</strong> You shouldn&apos;t abuse of this possibility though. <strong>You should always strive to build truly unentangled Services or Features</strong> that don&apos;t rely on one another.</p>
+<p><strong>IMPORTANT:</strong> You shouldn&apos;t abuse of this possibility though. <strong>You should always strive to build truly unentangled Services or Features</strong> that don&apos;t rely on one another.</p>
 </blockquote>
 <hr>
 <p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/register-action-with-priority-yuibn" target="_blank">https://codesandbox.io/s/register-action-with-priority-yuibn</a></p>
 <hr>
 <h2 id="action-meta-information">Action Meta Information</h2>
-<p>When using the extended configuration, you can pass any kind of other option along with your action. The info you pass may be used for debugging or tracing purpose by the Service or Feature that creates the hook.</p>
-<p>There is still a lot of work-in-progress in improving the App isolation and error tracing of hooks using those Action Meta Information. For now, you can find some examples in this SandBox:</p>
+<p>You can pass other options along with your Action using the extended configuration. The info you pass may be used for debugging or tracing purpose by the Service or Feature that creates the Extension.</p>
+<blockquote>
+<p>There is still a lot of work-in-progress in improving the App isolation and error tracing of Extensions using those Action Meta Information. For now, you can find some examples in this SandBox:</p>
+</blockquote>
 <hr>
 <p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/register-action-options-ey8h0" target="_blank">https://codesandbox.io/s/register-action-options-ey8h0</a></p>
 <hr>
+<h3 id="target-string">target [String]</h3>
+<p>It is the name of the Extension that you want to integrate.</p>
+<p>It could be just a plain <code>string</code>, but more often than not you will use a formal dictionary of available Extension by simply using the <code>$</code> charater at the beginning:</p>
+<pre><code class="lang-js">registerAction({
+  target: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
+});
+</code></pre>
+<p>In this case <code>$INIT_FEATURE</code> is not just a string, but it will be matched against a formal dictionary, verified and translated to the relative string.</p>
+<p>&#x1F449; Try to misspell it, you will see that the App crashes at boot time.</p>
+<p>You can use this feature even if you are not sure that a particular Extension will be available. It&apos;s a common scenario when you enable/disable Features at boot time based on feature flags or similar mechanisms.</p>
+<p>In such a case, you can use the Optional Target signature:</p>
+<pre><code class="lang-js">registerAction({
+  target: <span class="hljs-string">&apos;$THIS_MAY_NOT_EXISTS?&apos;</span>,
+});
+</code></pre>
+<blockquote>
+<p><strong>NOTE:</strong> Formal targets are all uppercase... just because they look like constants (which they are under the hood). It is just a convention.</p>
+</blockquote>
+<h3 id="handler-object-array-function">handler [Object, Array, Function]</h3>
+<p>The Action Handler is often a regular Javascript function that takes 2 arguments:</p>
+<pre><code class="lang-js"><span class="hljs-keyword">const</span> actionHandler = (extensionData = {}, appContext = {}) =&gt; {};
+</code></pre>
+<ul>
+<li>the Extension&apos;s Data is an object with custom data provided by the logic that creates the Extension. Is the way to pass data into the handlers.</li>
+<li>the App Context is the full set of ForrestJS APIs, plus application data or additional APIs that are shared between Features.</li>
+</ul>
+<h3 id="name-string">name [String]</h3>
+<h3 id="priority-int">priority [Int]</h3>
 
                                 
                                 </section>
@@ -773,7 +802,7 @@ Init First Feature
                 </a>
                 
                 
-                <a href="../create-hook/" class="navigation navigation-next " aria-label="Next page: Create Hook">
+                <a href="../create-extension/" class="navigation navigation-next " aria-label="Next page: Create Extension">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -784,7 +813,7 @@ Init First Feature
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"Register Action","level":"4.1","depth":1,"next":{"title":"Create Hook","level":"4.2","depth":1,"path":"api/create-hook/README.md","ref":"./api/create-hook/README.md","articles":[]},"previous":{"title":"Add React Router","level":"3.3.6","depth":2,"path":"howto/my-first-react-app/060-add-react-router/README.md","ref":"./howto/my-first-react-app/060-add-react-router/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu","livereload"],"pluginsConfig":{"collapsible-menu":{},"livereload":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/register-action/README.md","mtime":"2022-02-06T09:09:28.567Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-08T15:56:53.622Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"Register Action","level":"4.1","depth":1,"next":{"title":"Create Extension","level":"4.2","depth":1,"path":"api/create-extension/README.md","ref":"./api/create-extension/README.md","articles":[]},"previous":{"title":"Add React Router","level":"3.3.6","depth":2,"path":"howto/my-first-react-app/060-add-react-router/README.md","ref":"./howto/my-first-react-app/060-add-react-router/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/register-action/README.md","mtime":"2022-02-09T09:56:38.260Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-09T15:06:53.133Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -803,10 +832,6 @@ Init First Feature
     
         
         <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
-        
-    
-        
-        <script src="../../gitbook/gitbook-plugin-livereload/plugin.js"></script>
         
     
         

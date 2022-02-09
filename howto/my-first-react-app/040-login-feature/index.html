@@ -478,12 +478,12 @@
             
         </li>
     
-        <li class="chapter " data-level="4.2" data-path="../../../api/create-hook/">
+        <li class="chapter " data-level="4.2" data-path="../../../api/create-extension/">
             
-                <a href="../../../api/create-hook/">
+                <a href="../../../api/create-extension/">
             
                     
-                    Create Hook
+                    Create Extension
             
                 </a>
             
@@ -740,7 +740,7 @@
 <h3 id="the-waterfall">The Waterfall</h3>
 <p>We really want our action to go last because we want to receive the App&apos;s root component as it was set by the <code>custom-root</code> Feature.</p>
 <blockquote>
-<p>This is possible because the <code>$REACT_ROOT_COMPONENT</code> hook fires in <a href="../../../api/create-hook/#createhookwaterfall"><em>waterfall</em> mode</a>, <strong>each action will receive the output of the one before</strong>.</p>
+<p>This is possible because the <code>$REACT_ROOT_COMPONENT</code> hook fires in <a href="../../../api/create-hook/README.md#createhookwaterfall"><em>waterfall</em> mode</a>, <strong>each action will receive the output of the one before</strong>.</p>
 </blockquote>
 <p>Our handler receives the App&apos;s <em>root component</em> <code>App</code> and passes it down to our <code>LoginLogic</code> that works as a React <em>HOC</em>: it renders it only when the user is authenticated.</p>
 <h2 id="the-logincontext">The LoginContext</h2>
