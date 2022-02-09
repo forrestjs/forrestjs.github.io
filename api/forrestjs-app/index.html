@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>The Hook App · GitBook</title>
+        <title>The ForrestJS App · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -496,7 +496,7 @@
                 <a href="./">
             
                     
-                    The Hook App
+                    The ForrestJS App
             
                 </a>
             
@@ -626,7 +626,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >The Hook App</a>
+        <a href="../.." >The ForrestJS App</a>
     </h1>
 </div>
 
@@ -641,29 +641,37 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 id="hook-app">Hook App</h1>
+                                <h1 class="tutorial-step" id="forrestjs-api-&#xBB;-the-forrestjs-app"><span>ForrestJS API &#xBB;</span> The ForrestJS App</h1>
+
+<p><a href="../README.md">ForrestJS API</a> &#xBB; <a href="./">The ForrestJS App</a></p>
+<hr>
+<h1 id="the-forrestjs-app">The ForrestJS App</h1>
 <h2 id="the-philosopy">The Philosopy</h2>
-<p>You can organize your business logic into a <em>Hook App</em> in order to maximize the <a href="https://en.wikipedia.org/wiki/Single-responsibility_principle" target="_blank">Single Responsibility</a> and <a href="https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle" target="_blank">Open/Close</a> principle.</p>
-<p>You divide your codebase in 2 categories:</p>
+<p>You can organize your business logic into a <em>ForrestJS App</em> in order to maximize the <a href="https://en.wikipedia.org/wiki/Single-responsibility_principle" target="_blank">Single Responsibility</a> and <a href="https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle" target="_blank">Open/Close</a> principle.</p>
+<p>You divide your codebase in two categories:</p>
 <ul>
 <li>Features</li>
 <li>Services</li>
 </ul>
 <h3 id="features">Features</h3>
-<p>A <strong>Feature</strong> is what your customer gives you money to build. It&apos;s custom made and should not be shared among different Apps. It most certainly contains business secrets.</p>
+<blockquote>
+<p>A <strong>Feature</strong> is what your customer is willing to pay.</p>
+</blockquote>
+<p>It&apos;s custom made and SHOULD NOT BE SHARED among different Apps.<br>It most certainly contains business secrets.</p>
 <p>&#x2705; Some examples of <em>Features</em> are:</p>
 <ul>
 <li>A home page</li>
-<li>An endpoint that list your App&apos;s users</li>
-<li>An authentication service that builds JWT tokens</li>
+<li>An endpoint that list your users</li>
+<li>An authentication service that build JWT tokens</li>
 </ul>
 <h3 id="services">Services</h3>
-<p>A <strong>Service</strong> is everything that is irrelevant to your customer, but needed in order to run an App. They are generic and should be reusable across different Apps.</p>
+<p>A <strong>Service</strong> is everything that is irrelevant to your customer, but needed in order to run an App.</p>
+<p>SERVICES are generic and SHOULD BE REUSABLE across different Apps.</p>
 <p>&#x2705; Some examples of <em>Services</em> are:</p>
 <ul>
 <li>A function that performs an SQL query towards a DBMS</li>
 <li>An ApolloClient instance that let you fetch from a GraphQL server</li>
-<li>A components library for React (like <a href="https://mui.com" target="_blank">MUI</a>)</li>
+<li>A component library for React (like <a href="https://mui.com" target="_blank">MUI</a>)</li>
 <li>A routing library for React (like <a href="https://reactrouter.com/" target="_blank">react-router</a>)</li>
 </ul>
 <h2 id="quick-start-for-nodejs">Quick Start for NodeJS</h2>
@@ -675,17 +683,24 @@
 <iframe src="https://codesandbox.io/embed/react-root-basic-tlo6q?fontsize=14&amp;hidenavigation=1&amp;theme=dark&amp;view=split&amp;editorsize=70" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" title="service-fastify" allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking" sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"></iframe>
 
 <h2 id="intro">Intro</h2>
-<p>The <em>Hook App</em> is heavily inspired to a React app:</p>
+<p>A <em>ForrestJS App</em> is heavily inspired to a React app:</p>
 <ul>
 <li>it receives some properties</li>
 <li>it has an internal context</li>
 <li>it has a lifecycle</li>
+<li>it produces a predictable result</li>
 </ul>
+<p>[[TO BE CONTINUED]]</p>
 <h2 id="lifecycle-hooks">Lifecycle Hooks</h2>
+<p>[[TO BE CONTINUED]]</p>
 <h3 id="initservices">$INIT_SERVICE(S)</h3>
+<p>[[TO BE CONTINUED]]</p>
 <h3 id="initfeatures">$INIT_FEATURE(S)</h3>
+<p>[[TO BE CONTINUED]]</p>
 <h3 id="startservices">$START_SERVICE(S)</h3>
+<p>[[TO BE CONTINUED]]</p>
 <h3 id="startfeatures">$START_FEATURE(S)</h3>
+<p>[[TO BE CONTINUED]]</p>
 
                                 
                                 </section>
@@ -729,7 +744,7 @@
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"The Hook App","level":"4.3","depth":1,"next":{"title":"The App Context","level":"4.4","depth":1,"path":"api/app-context/README.md","ref":"./api/app-context/README.md","articles":[]},"previous":{"title":"Create Extension","level":"4.2","depth":1,"path":"api/create-extension/README.md","ref":"./api/create-extension/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/hook-app/README.md","mtime":"2022-02-06T09:09:28.567Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-09T15:06:53.133Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"The ForrestJS App","level":"4.3","depth":1,"next":{"title":"The App Context","level":"4.4","depth":1,"path":"api/app-context/README.md","ref":"./api/app-context/README.md","articles":[]},"previous":{"title":"Create Extension","level":"4.2","depth":1,"path":"api/create-extension/README.md","ref":"./api/create-extension/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu","livereload"],"pluginsConfig":{"collapsible-menu":{},"livereload":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/forrestjs-app/README.md","mtime":"2022-02-09T15:12:30.207Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-08T15:56:53.622Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -748,6 +763,10 @@
     
         
         <script src="../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
+        
+    
+        
+        <script src="../../gitbook/gitbook-plugin-livereload/plugin.js"></script>
         
     
         
