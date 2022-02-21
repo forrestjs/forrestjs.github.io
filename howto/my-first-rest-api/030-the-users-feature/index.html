@@ -654,24 +654,24 @@
 <h2 id="create-a-context-for-the-users-feature">Create a context for the Users Feature</h2>
 <p>The first goal to achive is to allocate a piece of memory where to store our list of users. Here are some requirements for this goal:</p>
 <ul>
-<li>this memory should be scoped to the App&apos;s and not leaking to the rest of the process</li>
-<li>this memory should be accessible to the REST endpoints that we will implement later on</li>
-<li>we should use reliable API, and do not play with weird Javascript black magic tricks</li>
+<li>this memory should be <strong>scoped to the App</strong>&apos;s and not leaking to the rest of the NodeJS process</li>
+<li>this memory should be <strong>accessible to the REST handlers</strong> that we will implement later on</li>
+<li>we should <strong>use reliable API</strong>, and do not play with weird Javascript black magic tricks</li>
 </ul>
 <p>With that in mind, let&apos;s create the feature&apos;s manifest and register the first action in <code>/users/index.js</code>:</p>
 <pre><code class="lang-js"><span class="hljs-built_in">module</span>.exports = {
   name: <span class="hljs-string">&apos;usersFeature&apos;</span>,
-  hook: <span class="hljs-string">&apos;$INIT_FEATURES&apos;</span>,
+  target: <span class="hljs-string">&apos;$INIT_FEATURES&apos;</span>,
   handler: ({ setContext }) =&gt; {
     setContext(<span class="hljs-string">&apos;users.list&apos;</span>, [<span class="hljs-string">&apos;Luke Skywalker&apos;</span>, <span class="hljs-string">&apos;Ian Solo&apos;</span>]);
   },
 };
 </code></pre>
 <blockquote>
-<p>The <code>$INIT_FEATURES</code> hook is part of a ForrestJS App lifecycle.<br>It allows to inject custom logic during the booting of our App.</p>
+<p>The <code>$INIT_FEATURES</code> extension is part of a ForrestJS App lifecycle.<br>It allows to inject custom logic during the booting sequence of our App.</p>
 </blockquote>
 <p>In our specific case, we use it to inizialize the <em>Users Database</em> with some dummy data from Star Wars.</p>
-<p>The <a href="../../../api/set-context/README.md"><code>setContext()</code></a> utility facilitates the definition of an App scoped piece of memory. Later on, we will be able to read from this memory using the <code>getContext()</code> function.</p>
+<p>The <a href="../../../api/app-context/#writing-to-the-context"><code>setContext()</code></a> utility facilitates the definition of an App scoped piece of memory. Later on, we will be able to read from this memory using the <code>getContext()</code> function.</p>
 <h2 id="list-users-route">List Users Route</h2>
 <p>Now that we have the &quot;database&quot; in place, it is time to create a route handler that is able to expose this data to the public.</p>
 <p>Let&apos;s create <code>./routes/list-users.js</code>:</p>
@@ -756,7 +756,7 @@ which is actually called <a href="https://github.com/forrestjs/forrestjs/blob/ma
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"The Users Feature","level":"3.2.3","depth":2,"next":{"title":"Add a New User","level":"3.2.4","depth":2,"path":"howto/my-first-rest-api/040-add-new-user/README.md","ref":"./howto/my-first-rest-api/040-add-new-user/README.md","articles":[]},"previous":{"title":"Create a Simple Home Page","level":"3.2.2","depth":2,"path":"howto/my-first-rest-api/020-fastify-home-page/README.md","ref":"./howto/my-first-rest-api/020-fastify-home-page/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu","livereload"],"pluginsConfig":{"collapsible-menu":{},"livereload":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/my-first-rest-api/030-the-users-feature/README.md","mtime":"2022-02-06T09:09:28.575Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-09T16:24:14.086Z"},"basePath":"../../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"The Users Feature","level":"3.2.3","depth":2,"next":{"title":"Add a New User","level":"3.2.4","depth":2,"path":"howto/my-first-rest-api/040-add-new-user/README.md","ref":"./howto/my-first-rest-api/040-add-new-user/README.md","articles":[]},"previous":{"title":"Create a Simple Home Page","level":"3.2.2","depth":2,"path":"howto/my-first-rest-api/020-fastify-home-page/README.md","ref":"./howto/my-first-rest-api/020-fastify-home-page/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"howto/my-first-rest-api/030-the-users-feature/README.md","mtime":"2022-02-20T08:08:34.078Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-02-21T07:24:26.002Z"},"basePath":"../../..","book":{"language":""}});
         });
     </script>
 </div>
@@ -775,10 +775,6 @@ which is actually called <a href="https://github.com/forrestjs/forrestjs/blob/ma
     
         
         <script src="../../../gitbook/gitbook-plugin-collapsible-menu/plugin.js"></script>
-        
-    
-        
-        <script src="../../../gitbook/gitbook-plugin-livereload/plugin.js"></script>
         
     
         
