@@ -4,7 +4,7 @@
     <head>
         <meta charset="UTF-8">
         <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
-        <title>createExtension() · GitBook</title>
+        <title>ForrestJS.run() · GitBook</title>
         <meta http-equiv="X-UA-Compatible" content="IE=edge" />
         <meta name="description" content="">
         <meta name="generator" content="GitBook 3.2.3">
@@ -69,10 +69,10 @@
     <link rel="shortcut icon" href="../../gitbook/images/favicon.ico" type="image/x-icon">
 
     
-    <link rel="next" href="../app-context/" />
+    <link rel="next" href="../register-action/" />
     
     
-    <link rel="prev" href="../register-action/" />
+    <link rel="prev" href="../../howto/my-first-react-app/060-add-react-router/" />
     
 
     </head>
@@ -485,9 +485,9 @@
         
         
     
-        <li class="chapter " data-level="5.1" data-path="../forrestjs-run/">
+        <li class="chapter active" data-level="5.1" data-path="./">
             
-                <a href="../forrestjs-run/">
+                <a href="./">
             
                     
                     ForrestJS.run()
@@ -511,9 +511,9 @@
             
         </li>
     
-        <li class="chapter active" data-level="5.3" data-path="./">
+        <li class="chapter " data-level="5.3" data-path="../create-extension/">
             
-                <a href="./">
+                <a href="../create-extension/">
             
                     
                     createExtension()
@@ -646,7 +646,7 @@
     <!-- Title -->
     <h1>
         <i class="fa fa-circle-o-notch fa-spin"></i>
-        <a href="../.." >createExtension()</a>
+        <a href="../.." >ForrestJS.run()</a>
     </h1>
 </div>
 
@@ -661,179 +661,129 @@
     
                                 <section class="normal markdown-section">
                                 
-                                <h1 class="tutorial-step" id="forrestjs-api-&#xBB;-create-extension"><span>ForrestJS API &#xBB;</span> Create Extension</h1>
+                                <h1 class="tutorial-step" id="forrestjs-api-&#xBB;-forrestjsrun"><span>ForrestJS API &#xBB;</span> ForrestJS.run()</h1>
 
-<p><a href="../README.md">ForrestJS API</a> &#xBB; <a href="./">Create Extension</a></p>
+<p><a href="../README.md">ForrestJS API</a> &#xBB; <a href="./">ForrestJS.run()</a></p>
 <hr>
-<h1 id="create-extension">Create Extension</h1>
-<p>Services and Features interact with the App&apos;s Lifecycle and with each others by creating new Extensions.</p>
+<h1 id="forrestjsrun">ForrestJS.run()</h1>
+<h2 id="the-philosopy">The Philosopy</h2>
+<p>You can organize your business logic into a <em>ForrestJS App</em> in order to maximize the <a href="https://en.wikipedia.org/wiki/Single-responsibility_principle" target="_blank">Single Responsibility</a> and <a href="https://en.wikipedia.org/wiki/Open%E2%80%93closed_principle" target="_blank">Open/Close</a> principle. And yes, also to maximize code reusability.</p>
+<p>You should divide your source files in two categories:</p>
+<ul>
+<li>Features</li>
+<li>Services</li>
+</ul>
+<h3 id="features">Features</h3>
 <blockquote>
-<p>CLASSIC EXAMPLE:</p>
-<ol>
-<li>Our App uses a Service to establish a connection to Postgres</li>
-<li>A Feature needs to run a SQL query as soon the connection exists</li>
-</ol>
-<p>&#x1F449; We solved this situation in the <a href="howto/my-first-rest-api/060-integrate-services-and-features">My First REST API / Integrate Services and Features</a> tutorial. Go check it out!</p>
+<p>A <strong>Feature</strong> is what your customer is willing to pay for.</p>
 </blockquote>
+<p>It&apos;s custom made and SHOULD NOT BE SHARED among different Apps.<br>It most certainly contains business secrets.</p>
+<p>&#x2705; Some examples of <em>Features</em> are:</p>
+<ul>
+<li>A server-side rendered home page</li>
+<li>An endpoint that list your users from a database</li>
+<li>An authentication service that builds JWT tokens</li>
+</ul>
+<h3 id="services">Services</h3>
+<p>A <strong>Service</strong> is everything that is irrelevant to your customer, but absolutely needed in order to run your Features.</p>
+<p>Services are generic and SHOULD BE REUSABLE across different Apps.<br>Services belong to NPM or your private version of it.</p>
+<p>&#x2705; Some examples of <em>Services</em> are:</p>
+<ul>
+<li>A function that performs an SQL query towards a DBMS</li>
+<li>An ApolloClient instance that let you fetch from a GraphQL server</li>
+<li>A component library for React (like <a href="https://mui.com" target="_blank">MUI</a>)</li>
+<li>A routing library for React (like <a href="https://reactrouter.com/" target="_blank">react-router</a>)</li>
+</ul>
 <hr>
-<h2 id="its-just-a-regular-function">It&apos;s Just a Regular Function</h2>
-<p>It&apos;s important to understand that an Extension is just a <strong>programmable function</strong> that we call within a registered Action:</p>
-<pre><code class="lang-js"><span class="hljs-keyword">const</span> myService = {
-  target: <span class="hljs-string">&apos;$INIT_SERVICE&apos;</span>,
-  handler: ({ createExtension }) =&gt; {
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;myService::init()&apos;</span>);
+<h2 id="quick-start-for-nodejs">Quick Start for NodeJS</h2>
+<p>You can run a simple <a href="https://www.fastify.io/" target="_blank">Fastify</a> app with custom routing and serve a complex website or REST / GraphQL API:</p>
+<iframe src="https://codesandbox.io/embed/service-fastify-th8dq?fontsize=14&amp;hidenavigation=1&amp;theme=dark&amp;view=split&amp;editorsize=70" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" title="service-fastify" allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking" sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"></iframe>
 
-    <span class="hljs-comment">// Create an Extension:</span>
-    createExtension.sync(<span class="hljs-string">&apos;foobar&apos;</span>);
+<hr>
+<h2 id="quick-start-for-react">Quick Start for React</h2>
+<p>You can render a React App and use the ForrestJS compositional approach in your frontend.</p>
+<iframe src="https://codesandbox.io/embed/react-root-basic-tlo6q?fontsize=14&amp;hidenavigation=1&amp;theme=dark&amp;view=split&amp;editorsize=70" style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" title="service-fastify" allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking" sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"></iframe>
 
-    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;myService::afterInit&apos;</span>);
+<hr>
+<h2 id="intro">Intro</h2>
+<p>A <em>ForrestJS App</em> is heavily inspired to a React app:</p>
+<ul>
+<li>it receives some properties</li>
+<li>it has an internal context</li>
+<li>it has a (boot) lifecycle</li>
+<li>it produces a predictable result</li>
+</ul>
+<p>[[TO BE CONTINUED]]</p>
+<hr>
+<h2 id="forrestjsrun-api">ForrestJS.run() API</h2>
+<h3 id="services">services</h3>
+<pre><code>type:      Array
+</code></pre><h3 id="features">features</h3>
+<pre><code>type:      Array
+</code></pre><h3 id="settings">settings</h3>
+<pre><code>type:      Object | (async) Function
+</code></pre><p>Pass configuration to your running App.</p>
+<p>Any key that you set into this object will be available to any Service, Feature, and registered Action via <a href="../app-config/"><code>getConfig()</code> API</a>.</p>
+<p>Settings can be calculated on the fly by passing an <em>async Function</em> that will receive the full App context (it is indeed just a registed Action):</p>
+<pre><code class="lang-js">forrest.run({
+  settings: <span class="hljs-keyword">async</span> ({ setConfig }) =&gt; {
+    <span class="hljs-comment">// Get remote data:</span>
+    <span class="hljs-keyword">const</span> services = <span class="hljs-keyword">await</span> getServiceDiscoveryInfo();
+
+    <span class="hljs-comment">// Use the API to extend the configuration:</span>
+    setConfg(<span class="hljs-string">&apos;service.discovery.info&apos;</span>, services);
   },
-};
-
-<span class="hljs-keyword">const</span> myFeature = {
-  target: <span class="hljs-string">&apos;foobar&apos;</span>,
-  handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;myFeature, on myService::init&apos;</span>),
-};
-
-forrest.run({
-  services: [myService],
-  features: [myFeature],
 });
 </code></pre>
-<p>This simple App defines a custom Service that:</p>
-<ol>
-<li>registers an Action into the App&apos;s Lifecyle</li>
-<li>log something</li>
-<li>creates an Extension allowing other Features to inject their logic</li>
-<li>log something else</li>
-</ol>
-<p>The custom Feature registers an Action into that Extension, injecting new logic into it.</p>
-<hr>
-<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/create-hook-sync-04yy4?file=/src/index.js" target="_blank">https://codesandbox.io/s/create-hook-sync-04yy4?file=/src/index.js</a></p>
-<hr>
-<p>&#x1F449; The baseline is that creating an Extension is just like running a regular function, but <strong>this function behaves like a black-box</strong>, and we can&apos;t know in advance who will register Actions into it.</p>
-<p>As with functions:</p>
-<ul>
-<li>an Extension has a <strong>unique name</strong>, that is simply a string</li>
-<li>you can pass arguments into an Extension</li>
-<li>you can collect the returning values from each registered Action</li>
-</ul>
-<hr>
-<h2 id="the-extension-targets-registry">The Extension Targets Registry</h2>
-<p>So far we used simple strings as Extensions&apos; names.</p>
-<p>That makes it for a very fast development cycle, but it opens up the Gates of Hell for typos and any kind of nasty mistakes.</p>
-<blockquote>
-<p><strong>Don&apos;t worry:</strong> there is a way around this issue that solves most of the typos scenario, while preserving coding speed &#x1F60E;.</p>
-</blockquote>
-<p>The first step is to <strong>build an _Extensions Targets Registry</strong> for your Service. It is just a key/value store where you will list all the extension points that your Service will use:</p>
-<pre><code class="lang-js"><span class="hljs-keyword">const</span> myServiceExtensions = {
-  MY_SERVICE_INIT: <span class="hljs-string">&apos;myService/init&apos;</span>,
-  MY_SERVICE_START: <span class="hljs-string">&apos;myService/start&apos;</span>,
-};
-</code></pre>
-<p>Then you jump into your Service Manifest&apos;s function and register it:</p>
-<pre><code class="lang-js"><span class="hljs-keyword">const</span> myService = ({ registerAction, registerTargets }) =&gt; {
-  <span class="hljs-comment">// Register the Extension Targets</span>
-  registerTargets(myServiceExtensions);
+<h3 id="context">context</h3>
+<pre><code>type:      Object
+</code></pre><p>Add dependencies to your runing App.</p>
+<p>Any key that you set into this object will be available to any Service, Feature, and registered Action via <a href="../app-context/"><code>getContext()</code> API</a>.</p>
+<h3 id="trace">trace</h3>
+<pre><code>type:      String
+value:     &quot;compact&quot; | &quot;full&quot;
+</code></pre><hr>
+<h2 id="app-boot-lifecycle-in-forrestjs">App Boot Lifecycle in ForrestJS</h2>
+<p>The Boot Lifecycle is composed by a list of <strong>asynchronous</strong> Extensions created by ForrestJS during the booting of your App.</p>
+<pre><code class="lang-js"><span class="hljs-comment">// Only available to Services</span>
+$START            serie
+$SETTINGS         serie
 
-  <span class="hljs-comment">// ... register your actions</span>
-};
+<span class="hljs-comment">// Availabe to Services and Features</span>
+$INIT_SERVICES    parallel
+$INIT_SERVICE     serie
+$INIT_FEATURES    parallel
+$INIT_FEATURE     serie
+
+$START_SERVICES   parallel
+$START_SERVICE    serie
+$START_FEATURES   parallel
+$START_FEATURE    serie
+
+$FINISH           serie
 </code></pre>
-<blockquote>
-<p>This will build an internal dictionary of all the Extensions available to the Application.</p>
-</blockquote>
-<p>&#x1F60E; From now on, it&apos;s easy.</p>
-<p>First, you can formally refer to the Registry when you create your Extensions:</p>
-<pre><code class="lang-js"><span class="hljs-comment">// Create your Extensions using symbols from the manifest:</span>
-createExtension.sync(<span class="hljs-string">&apos;$MY_SERVICE_INIT&apos;</span>);
-</code></pre>
-<p>And then you can reference back when you register your Actions:</p>
+<p>&#x1F449; Each lifecycle Extension provides the App&apos;s Context as first parameter into the Action&apos;s handler.</p>
 <pre><code class="lang-js">registerAction({
-  target: <span class="hljs-string">&apos;$MY_SERVICE_INIT&apos;</span>,
-  handler: () =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">&apos;firstFeature, on myService::init&apos;</span>),
+  target: <span class="hljs-string">&apos;$INIT_FEATURE&apos;</span>,
+  handler: (ctx) =&gt; {
+    ctx.getConfig(<span class="hljs-string">&apos;foo.bar&apos;</span>);
+  },
 });
 </code></pre>
-<hr>
-<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/create-hook-reference-ewqkn?file=/src/index.js" target="_blank">https://codesandbox.io/s/create-hook-reference-ewqkn?file=/src/index.js</a></p>
-<hr>
-<blockquote>
-<p>By using the <code>$</code> sign at the beginning of your Target&apos;s name you ask ForrestJS to formally validate its existance against the internal Extension Targets Registry.</p>
-</blockquote>
-<p>If the Extension does not exists,<strong>ForrestJS will throw an error</strong> and your App will fail to start. So you will be able to <strong>catch on all those silly mistakes in real time</strong> while building your Features.</p>
-<hr>
-<h2 id="passing-arguments-to-the-action-handlers">Passing Arguments to the Action Handlers</h2>
-<p>When you create an Extension you can pass arguments to it as a single object:</p>
-<pre><code class="lang-js">createExtension.sync(<span class="hljs-string">&apos;extensionName&apos;</span>, {
-  foo: <span class="hljs-string">&apos;bar&apos;</span>,
-});
-
+<p>&#x1F525; All the lifecycle Extensions are ASYNCHRONOUS.<br>&#x1F449; You can use <code>async/await</code> in your Action&apos;s handlers, or return promises:</p>
+<pre><code class="lang-js"><span class="hljs-comment">// Assuming you are running `service-pg`</span>
 registerAction({
-  target: <span class="hljs-string">&apos;extensionName&apos;</span>,
-  handler: (params) =&gt; <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`foo: <span class="hljs-subst">${params.foo}</span>`</span>),
+  target: <span class="hljs-string">&apos;$START_FEATURE&apos;</span>,
+  handler: <span class="hljs-keyword">async</span> ({ getContext }) =&gt; {
+    <span class="hljs-keyword">const</span> query = getContext(<span class="hljs-string">&apos;pg.query&apos;</span>);
+    <span class="hljs-keyword">await</span> query(<span class="hljs-string">&apos;SELECT NOW()&apos;</span>);
+  },
 });
 </code></pre>
-<p>This mechanic is often used to pass down APIs and/or utility functions.</p>
-<hr>
-<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/create-hook-arguments-pgmwz?file=/src/index.js" target="_blank">https://codesandbox.io/s/create-hook-arguments-pgmwz?file=/src/index.js</a></p>
-<hr>
-<h2 id="collecting-action-handlers-returing-values">Collecting Action Handlers Returing Values</h2>
-<p>It is also possible to collect and manipulate each registered Action&apos;s Handler returning values:</p>
-<pre><code class="lang-js"><span class="hljs-comment">// Register some Actions:</span>
-registerAction({ target: <span class="hljs-string">&apos;foobar&apos;</span>, handler: () =&gt; <span class="hljs-number">5</span> });
-registerAction({ target: <span class="hljs-string">&apos;foobar&apos;</span>, handler: () =&gt; <span class="hljs-number">10</span> });
-
-<span class="hljs-comment">// Run the Extension and collect the results:</span>
-<span class="hljs-keyword">const</span> data = createExtension.sync(<span class="hljs-string">&apos;foobar&apos;</span>);
-<span class="hljs-built_in">console</span>.log(data);
-</code></pre>
-<hr>
-<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/create-hook-returning-values-66xq3?file=/src/index.js" target="_blank">https://codesandbox.io/s/create-hook-returning-values-66xq3?file=/src/index.js</a></p>
-<hr>
-<p>Each Action Handler&apos;s returning value is represented by a <em>positional array</em> with:</p>
-<ul>
-<li>[0] raw returning value</li>
-<li>[1] Action&apos;s details</li>
-<li>[2] Extension&apos;s details</li>
-</ul>
-<p>[[TO BE EXPANDED]]</p>
-<h2 id="createextensionsync">createExtension.sync()</h2>
-<p>The <code>sync</code> method is the most common and used type of Extension. It runs its registered Actions in serie, sorted by priority, and it expects only synchronous functions.</p>
-<p>Use this method to provide ways to enrich or modify configuration at boot time. A good example is how we register routes in the <a href="https://github.com/forrestjs/forrestjs/blob/master/packages/service-fastify/src/start-service-handler.js#L41" target="_blank">Fastify Service</a>.</p>
-<pre><code class="lang-js"><span class="hljs-keyword">const</span> results = createExtension.sync(<span class="hljs-string">&apos;extensionName&apos;</span>, { arg1: <span class="hljs-string">&apos;x&apos;</span>, arg2: <span class="hljs-string">&apos;y&apos;</span> });
-</code></pre>
-<h2 id="createextensionserie">createExtension.serie()</h2>
-<p>Use the <code>serie</code> method when you want <strong>asynchronous</strong> Action Handlers to <strong>execute one after the other</strong>, by the registration or priority order.</p>
-<blockquote>
-<p>The returning values will reflect the execution order.</p>
-</blockquote>
-<hr>
-<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/create-hook-serie-e6670?file=/src/index.js" target="_blank">https://codesandbox.io/s/create-hook-serie-e6670?file=/src/index.js</a></p>
-<hr>
-<h2 id="createextensionparallel">createExtension.parallel()</h2>
-<p>Use the <code>parallel</code> method when you want <strong>asynchronous</strong> Action Handlers to <strong>execute at the same time</strong>, triggered by by the registration or priority order.</p>
-<blockquote>
-<p>The returning values order will reflect the trigger order.</p>
-</blockquote>
-<pre><code class="lang-js"><span class="hljs-keyword">const</span> results = createExtension.parallel(<span class="hljs-string">&apos;extensionName&apos;</span>, {
-  arg1: <span class="hljs-string">&apos;x&apos;</span>,
-  arg2: <span class="hljs-string">&apos;y&apos;</span>,
-});
-</code></pre>
-<hr>
-<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/create-hook-parallel-qylzn?file=/src/index.js" target="_blank">https://codesandbox.io/s/create-hook-parallel-qylzn?file=/src/index.js</a></p>
-<hr>
-<h2 id="createextensionwaterfall">createExtension.waterfall()</h2>
-<p>Use the <code>waterfall</code> method if you want to let <strong>synchronous</strong> Action Handlers to transform a received input by returning a new version of it.</p>
-<blockquote>
-<p>The Action handlers are executed by the registration or priority order.</p>
-</blockquote>
-<p>In the end, the returning value will yield the value that was returned by the last handler.</p>
-<pre><code class="lang-js"><span class="hljs-keyword">const</span> result = createExtension.watefall(<span class="hljs-string">&apos;extensionName&apos;</span>, <span class="hljs-number">10</span>);
-<span class="hljs-built_in">console</span>.log(result.value);
-</code></pre>
-<hr>
-<p><strong>&#x1F4BB; Live on CodeSandbox:</strong><br><a href="https://codesandbox.io/s/create-hook-waterfall-j4hnc?file=/src/index.js" target="_blank">https://codesandbox.io/s/create-hook-waterfall-j4hnc?file=/src/index.js</a></p>
-<hr>
+<h3 id="action-execution-order">Action Execution Order</h3>
+<p>In the rare case in which you REALLY need to control the execution order of a specific Lifecycle Action, please target the singular Extension: <code>$INIT_FEATURE</code>, <code>$START_SERVICE</code>.</p>
+<p>&#x1F449; When you run Actions in <code>sync</code>, <code>serie</code>, or <code>waterfall</code>, the priority makes perfect sense as the Actions are executed one AFTER another.</p>
+<p>&#x1F525; When uou run Actions in <code>parallel</code>, the priority is only used to set the launch order of the handlers. The execution order is entirely unpredictable for it is asynchronous.</p>
 
                                 
                                 </section>
@@ -861,12 +811,12 @@ registerAction({ target: <span class="hljs-string">&apos;foobar&apos;</span>, ha
 
             
                 
-                <a href="../register-action/" class="navigation navigation-prev " aria-label="Previous page: registerAction()">
+                <a href="../../howto/my-first-react-app/060-add-react-router/" class="navigation navigation-prev " aria-label="Previous page: Add React Router">
                     <i class="fa fa-angle-left"></i>
                 </a>
                 
                 
-                <a href="../app-context/" class="navigation navigation-next " aria-label="Next page: The App Context">
+                <a href="../register-action/" class="navigation navigation-next " aria-label="Next page: registerAction()">
                     <i class="fa fa-angle-right"></i>
                 </a>
                 
@@ -877,7 +827,7 @@ registerAction({ target: <span class="hljs-string">&apos;foobar&apos;</span>, ha
     <script>
         var gitbook = gitbook || [];
         gitbook.push(function() {
-            gitbook.page.hasChanged({"page":{"title":"createExtension()","level":"5.3","depth":1,"next":{"title":"The App Context","level":"5.4","depth":1,"path":"api/app-context/README.md","ref":"./api/app-context/README.md","articles":[]},"previous":{"title":"registerAction()","level":"5.2","depth":1,"path":"api/register-action/README.md","ref":"./api/register-action/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/create-extension/README.md","mtime":"2022-05-15T08:54:36.445Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-05-16T06:05:26.988Z"},"basePath":"../..","book":{"language":""}});
+            gitbook.page.hasChanged({"page":{"title":"ForrestJS.run()","level":"5.1","depth":1,"next":{"title":"registerAction()","level":"5.2","depth":1,"path":"api/register-action/README.md","ref":"./api/register-action/README.md","articles":[]},"previous":{"title":"Add React Router","level":"4.3.6","depth":2,"path":"howto/my-first-react-app/060-add-react-router/README.md","ref":"./howto/my-first-react-app/060-add-react-router/README.md","articles":[]},"dir":"ltr"},"config":{"gitbook":"*","theme":"default","variables":{},"plugins":["add-js-css","custom-favicon","insert-logo","code","collapsible-menu"],"pluginsConfig":{"collapsible-menu":{},"search":{},"add-js-css":{"css":["./forrestjs.css"]},"lunr":{"maxIndexSize":1000000,"ignoreSpecialCharacters":false},"code":{"copyButtons":true},"fontsettings":{"theme":"white","family":"sans","size":2},"highlight":{},"favicon":"/images/forrestjs.ico","custom-favicon":{},"sharing":{"facebook":true,"twitter":true,"google":false,"weibo":false,"instapaper":false,"vk":false,"all":["facebook","google","twitter","weibo","instapaper"]},"theme-default":{"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"},"showLevel":false},"insert-logo":{"url":"/images/forrestjs.png","style":"background: none;"}},"structure":{"langs":"LANGS.md","readme":"README.md","glossary":"GLOSSARY.md","summary":"SUMMARY.md"},"pdf":{"pageNumbers":true,"fontSize":12,"fontFamily":"Arial","paperSize":"a4","chapterMark":"pagebreak","pageBreaksBefore":"/","margin":{"right":62,"left":62,"top":56,"bottom":56}},"styles":{"website":"styles/website.css","pdf":"styles/pdf.css","epub":"styles/epub.css","mobi":"styles/mobi.css","ebook":"styles/ebook.css","print":"styles/print.css"}},"file":{"path":"api/forrestjs-run/README.md","mtime":"2022-05-15T11:19:02.092Z","type":"markdown"},"gitbook":{"version":"3.2.3","time":"2022-05-16T06:05:26.988Z"},"basePath":"../..","book":{"language":""}});
         });
     </script>
 </div>
